@@ -1,0 +1,137 @@
+
+.seller-orders-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .seller-orders-page h1 {
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .orders-table {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow-x: auto;
+  }
+  
+  .table-header {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1.2fr 1.2fr 1fr;
+    background: #f8f9fa;
+    padding: 1rem;
+    font-weight: bold;
+    color: #666;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1.2fr 1.2fr 1fr;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  
+  .table-row:hover {
+    background: #f8f9fa;
+  }
+  
+  .order-number {
+    font-weight: 500;
+    color: #007bff;
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+  }
+  
+  .modal-content {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .modal-content h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+  
+  .order-info {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .status-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .status-option {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: capitalize;
+  }
+  
+  .status-option:hover:not(:disabled) {
+    background: #f8f9fa;
+    border-color: #007bff;
+  }
+  
+  .status-option.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+  
+  .status-option:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .btn-block {
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .orders-table {
+      font-size: 0.9rem;
+    }
+    
+    .table-header {
+      display: none;
+    }
+    
+    .table-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    
+    .status-options {
+      grid-template-columns: 1fr;
+    }
+  }

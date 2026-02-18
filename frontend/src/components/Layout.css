@@ -1,0 +1,28 @@
+.layout { min-height: 100vh; display: flex; flex-direction: column; }
+.main { flex: 1; }
+.header { background: var(--primary); color: white; padding: 12px 0; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+.header-inner { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.logo { font-weight: 700; font-size: 1.35rem; }
+.search-form { flex: 1; min-width: 180px; max-width: 400px; display: flex; background: rgba(255,255,255,0.2); border-radius: var(--radius); overflow: hidden; }
+.search-form input { flex: 1; border: none; padding: 10px 14px; background: transparent; color: white; }
+.search-form input::placeholder { color: rgba(255,255,255,0.8); }
+.search-form button { padding: 10px 14px; background: rgba(255,255,255,0.2); color: white; }
+.header nav { display: flex; align-items: center; gap: 16px; }
+.header nav a, .header nav button { color: white; font-weight: 500; padding: 6px 10px; border-radius: 8px; background: none; }
+.header nav a:hover, .header nav button:hover { background: rgba(255,255,255,0.2); }
+.menu-btn { display: none; background: none; color: white; font-size: 1.5rem; padding: 4px 8px; }
+@media (max-width: 768px) {
+  .menu-btn { display: block; }
+  .search-form { order: 3; width: 100%; max-width: none; }
+  .header nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--primary); flex-direction: column; padding: 16px; }
+  .header nav.open { display: flex; }
+}
+.footer { background: var(--text); color: white; padding: 24px; text-align: center; margin-top: auto; }
+.admin-layout, .seller-layout { flex-direction: row; }
+.sidebar { width: 240px; background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; gap: 16px; min-height: 100vh; }
+.sidebar .logo { color: white; font-weight: 700; font-size: 1.25rem; }
+.sidebar nav { display: flex; flex-direction: column; gap: 8px; }
+.sidebar nav a { color: white; padding: 10px 12px; border-radius: var(--radius); }
+.sidebar nav a:hover { background: rgba(255,255,255,0.2); }
+.logout-btn { margin-top: auto; padding: 10px; background: rgba(255,255,255,0.2); color: white; border-radius: var(--radius); }
+.main-content { flex: 1; padding: 24px; overflow: auto; }

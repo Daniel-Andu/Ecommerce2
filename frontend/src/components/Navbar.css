@@ -1,0 +1,1028 @@
+/* ========== NAVBAR BASE STYLES ========== */
+.navbar {
+    background: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar.scrolled {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  .navbar-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  
+  /* ========== LOGO STYLES ========== */
+  .navbar-brand {
+    flex-shrink: 0;
+    text-decoration: none;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+  
+  /* Animated Icon Container */
+  .logo-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6, #D946EF);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Shimmer animation */
+  .logo-icon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    20%, 100% { transform: translateX(100%) rotate(45deg); }
+  }
+  
+  /* Pulse effect */
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70% {
+      transform: scale(1.1);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1.1);
+      opacity: 0;
+    }
+  }
+  
+  /* SVG icon styling */
+  .logo-icon svg {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    position: relative;
+    z-index: 2;
+  }
+  
+  .logo-icon svg path,
+  .logo-icon svg circle {
+    stroke: white;
+    fill: white;
+    transition: all 0.3s ease;
+  }
+  
+  /* Brand name styling */
+  .brand-name {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1E293B, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  
+  /* Decorative dot */
+  .brand-name::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    right: -8px;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .brand-logo:hover .brand-name::after {
+    opacity: 1;
+  }
+  
+  /* Text shine effect */
+  .brand-name::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s;
+  }
+  
+  .brand-logo:hover .brand-name::before {
+    left: 150%;
+  }
+  
+  /* Logo hover effects */
+  .brand-logo:hover .logo-icon {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 
+      0 15px 25px -5px rgba(99, 102, 241, 0.5),
+      0 0 0 2px rgba(255, 255, 255, 0.8),
+      0 0 0 4px rgba(99, 102, 241, 0.3);
+  }
+  
+  .brand-logo:hover .logo-icon svg {
+    animation: bounce 0.5s ease infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+  
+  /* ========== SEARCH FORM ========== */
+  .search-form {
+    flex: 1;
+    max-width: 600px;
+    display: flex;
+    position: relative;
+    border-radius: 50px;
+    background: #F1F5F9;
+    transition: all 0.3s;
+  }
+  
+  .search-form:focus-within {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+    background: white;
+  }
+  
+  .search-form input {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    border: 2px solid transparent;
+    border-radius: 50px 0 0 50px;
+    font-size: 1rem;
+    background: transparent;
+    transition: all 0.3s;
+  }
+  
+  .search-form input:focus {
+    outline: none;
+    border-color: #6366F1;
+  }
+  
+  .search-form input::placeholder {
+    color: #94A3B8;
+  }
+  
+  .search-form button {
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    color: white;
+    border: none;
+    border-radius: 0 50px 50px 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .search-form button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .search-form button:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .search-form button:hover {
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  }
+  
+  /* ========== MENU TOGGLE (MOBILE) ========== */
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #1E293B;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    transition: all 0.3s;
+  }
+  
+  .menu-toggle:hover {
+    background: #F1F5F9;
+  }
+  
+  /* ========== NAVIGATION LINKS ========== */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .nav-links > a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    position: relative;
+    padding: 0.5rem 0;
+  }
+  
+  .nav-links > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    transition: width 0.3s;
+  }
+  
+  .nav-links > a:hover {
+    color: #6366F1;
+  }
+  
+  .nav-links > a:hover::after {
+    width: 100%;
+  }
+  
+  /* ========== CART LINK ========== */
+  .cart-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: #EF4444;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    min-width: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    animation: pulse 2s infinite;
+  }
+  
+  .cart-link:hover .cart-badge {
+    animation: bounce 0.5s ease infinite;
+  }
+  
+  /* ========== USER MENU ========== */
+  .user-menu {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: all 0.3s;
+    background: #F1F5F9;
+  }
+  
+  .user-info:hover {
+    background: #E2E8F0;
+  }
+  
+  .user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-avatar-placeholder {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 2px solid white;
+  }
+  
+  .user-name {
+    font-weight: 600;
+    color: #1E293B;
+  }
+  
+  .dropdown-arrow {
+    font-size: 0.8rem;
+    color: #64748B;
+    margin-left: 0.25rem;
+  }
+  
+  /* ========== DROPDOWN MENU ========== */
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    min-width: 260px;
+    display: none;
+    z-index: 1000;
+    overflow: hidden;
+    animation: slideDown 0.3s ease;
+    border: 1px solid #E2E8F0;
+  }
+  
+  .user-menu:hover .dropdown {
+    display: block;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .dropdown a,
+  .dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    color: #475569;
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  
+  .dropdown a:last-child,
+  .dropdown button:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown a:hover,
+  .dropdown button:hover {
+    background: #F1F5F9;
+    color: #6366F1;
+    padding-left: 1.75rem;
+  }
+  
+  .dropdown-icon {
+    font-size: 1.2rem;
+    min-width: 24px;
+    display: inline-block;
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 0.5rem 0;
+  }
+  
+  /* Logout button specific */
+  .dropdown button.logout-btn {
+    color: #EF4444;
+    border-bottom: none;
+  }
+  
+  .dropdown button.logout-btn:hover {
+    background: #FEE2E2;
+    color: #DC2626;
+  }
+  
+  /* Special styles for admin dropdown items */
+  .dropdown a[href*="/admin"] .dropdown-icon,
+  .dropdown a[href*="/admin/sellers"] .dropdown-icon,
+  .dropdown a[href*="/admin/products"] .dropdown-icon,
+  .dropdown a[href*="/admin/categories"] .dropdown-icon,
+  .dropdown a[href*="/admin/banners"] .dropdown-icon,
+  .dropdown a[href*="/admin/orders"] .dropdown-icon {
+    color: #6366F1;
+  }
+  
+  /* Special styles for seller dropdown items */
+  .dropdown a[href*="/seller"] .dropdown-icon,
+  .dropdown a[href*="/seller/products"] .dropdown-icon,
+  .dropdown a[href*="/seller/orders"] .dropdown-icon {
+    color: #8B5CF6;
+  }
+  
+  /* Hover effects for dropdown items */
+  .dropdown a:hover .dropdown-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+  }
+  
+  /* ========== AUTH BUTTONS ========== */
+  .auth-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .auth-buttons .btn {
+    padding: 0.625rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .auth-buttons .btn-outline {
+    border: 2px solid #6366F1;
+    color: #6366F1;
+    background: transparent;
+  }
+  
+  .auth-buttons .btn-outline:hover {
+    background: #6366F1;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+  }
+  
+  .auth-buttons .btn-primary {
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    color: white;
+    border: none;
+  }
+  
+  .auth-buttons .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+  }
+  
+  /* ========== TABLET RESPONSIVE (768px - 1024px) ========== */
+  @media (max-width: 1024px) {
+    .navbar-container {
+      padding: 0.75rem 1.5rem;
+    }
+    
+    .nav-links {
+      gap: 1.5rem;
+    }
+    
+    .brand-name {
+      font-size: 20px;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .logo-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
+  /* ========== MOBILE RESPONSIVE (up to 768px) ========== */
+  @media (max-width: 768px) {
+    .navbar-container {
+      padding: 0.75rem 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .search-form {
+      order: 3;
+      max-width: 100%;
+      margin-top: 0.75rem;
+      flex: 0 0 100%;
+    }
+    
+    .search-form input {
+      padding: 0.75rem 1rem;
+    }
+    
+    .search-form button {
+      padding: 0.75rem 1.5rem;
+    }
+    
+    .menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      flex-direction: column;
+      padding: 1rem;
+      gap: 0.5rem;
+      border-top: 1px solid #E2E8F0;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 999;
+    }
+    
+    .nav-links.active {
+      display: flex;
+      animation: slideDown 0.3s ease;
+    }
+    
+    .nav-links > a {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+    
+    .nav-links > a:hover {
+      background: #F1F5F9;
+    }
+    
+    .nav-links > a::after {
+      display: none;
+    }
+    
+    .cart-link {
+      justify-content: space-between;
+    }
+    
+    .cart-badge {
+      position: static;
+      margin-left: auto;
+    }
+    
+    .user-menu {
+      width: 100%;
+    }
+    
+    .user-info {
+      width: 100%;
+      justify-content: space-between;
+      background: #F1F5F9;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+    
+    .user-info:hover {
+      background: #E2E8F0;
+    }
+    
+    .dropdown {
+      position: static;
+      box-shadow: none;
+      border: none;
+      background: #F8FAFC;
+      margin-top: 0.5rem;
+      border-radius: 12px;
+      display: none;
+      width: 100%;
+    }
+    
+    .user-menu.active .dropdown {
+      display: block;
+    }
+    
+    .dropdown a,
+    .dropdown button {
+      padding: 1rem;
+    }
+    
+    .auth-buttons {
+      width: 100%;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .auth-buttons .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
+  /* ========== SMALL MOBILE (up to 480px) ========== */
+  @media (max-width: 480px) {
+    .brand-name {
+      display: none;
+    }
+    
+    .logo-icon {
+      width: 45px;
+      height: 45px;
+    }
+    
+    .logo-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .search-form button {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .search-form button span {
+      display: none;
+    }
+    
+    .search-form button::after {
+      content: '🔍';
+    }
+    
+    .user-info span:not(.dropdown-arrow) {
+      display: none;
+    }
+    
+    .user-info {
+      padding: 0.5rem;
+    }
+    
+    .user-avatar,
+    .user-avatar-placeholder {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .dropdown {
+      min-width: 100%;
+    }
+  }
+  
+  /* ========== FOCUS STATES (Accessibility) ========== */
+  .nav-links a:focus-visible,
+  .search-form button:focus-visible,
+  .menu-toggle:focus-visible,
+  .dropdown a:focus-visible,
+  .dropdown button:focus-visible,
+  .auth-buttons .btn:focus-visible {
+    outline: 2px solid #6366F1;
+    outline-offset: 2px;
+  }
+  
+  /* ========== PRINT STYLES ========== */
+  @media print {
+    .navbar {
+      display: none;
+    }
+  }
+  
+  /* ========== DARK MODE SUPPORT (Optional) ========== */
+  @media (prefers-color-scheme: dark) {
+    .navbar {
+      background: #1E293B;
+    }
+    
+    .navbar.scrolled {
+      background: rgba(30, 41, 59, 0.95);
+    }
+    
+    .brand-name {
+      background: linear-gradient(135deg, #F1F5F9, #CBD5E1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .nav-links > a {
+      color: #CBD5E1;
+    }
+    
+    .user-info {
+      background: #334155;
+    }
+    
+    .user-info span {
+      color: #F1F5F9;
+    }
+    
+    .dropdown {
+      background: #1E293B;
+      border-color: #334155;
+    }
+    
+    .dropdown a,
+    .dropdown button {
+      color: #CBD5E1;
+      border-bottom-color: #334155;
+    }
+    
+    .dropdown a:hover,
+    .dropdown button:hover {
+      background: #334155;
+    }
+    
+    .search-form {
+      background: #334155;
+    }
+    
+    .search-form input {
+      color: #F1F5F9;
+    }
+    
+    .search-form input::placeholder {
+      color: #94A3B8;
+    }
+  }
+
+
+  /* ========== ADD THESE STYLES AT THE END OF YOUR Navbar.css ========== */
+
+/* Fix for dropdown visibility on full screen */
+.dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    min-width: 280px;
+    max-width: 320px;
+    display: none;
+    z-index: 9999;
+    overflow: visible;
+    animation: slideDown 0.3s ease;
+    border: 1px solid #E2E8F0;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  /* Make dropdown visible when active class is applied */
+  .dropdown.active {
+    display: block;
+  }
+  
+  /* Ensure dropdown doesn't get cut off on the right */
+  @media (min-width: 769px) {
+    .user-menu {
+      position: relative;
+    }
+    
+    .dropdown {
+      right: 0;
+      left: auto;
+      transform: none;
+    }
+  }
+  
+  /* For very large screens, ensure dropdown stays within viewport */
+  @media (min-width: 1920px) {
+    .dropdown {
+      right: 0;
+      left: auto;
+      max-width: 350px;
+    }
+  }
+  
+  /* Fix for mobile view */
+  @media (max-width: 768px) {
+    .dropdown {
+      position: static;
+      box-shadow: none;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      margin-top: 0.5rem;
+      border-radius: 12px;
+      display: none;
+      width: 100%;
+      max-width: 100%;
+      max-height: none;
+      overflow-y: visible;
+    }
+    
+    .dropdown.active {
+      display: block;
+    }
+    
+    .user-info {
+      cursor: pointer;
+    }
+  }
+  
+  /* Ensure logout button is always visible and properly styled */
+  .dropdown button.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    color: #EF4444;
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    border-bottom: none;
+  }
+  
+  .dropdown button.logout-btn:hover {
+    background: #FEE2E2;
+    color: #DC2626;
+    padding-left: 1.75rem;
+  }
+  
+  .dropdown button.logout-btn .dropdown-icon {
+    font-size: 1.2rem;
+    min-width: 24px;
+    display: inline-block;
+  }
+  
+  /* Fix z-index issues */
+  .navbar {
+    z-index: 1000;
+  }
+  
+  .dropdown {
+    z-index: 1001;
+  }
+  
+  /* Ensure dropdown doesn't overflow on small screens */
+  @media (max-height: 600px) {
+    .dropdown {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+  }
+  
+  /* Add a backdrop for mobile when dropdown is open */
+  @media (max-width: 768px) {
+    .dropdown.active::before {
+      display: none;
+    }
+  }
+  
+  /* Ensure the user menu is clickable */
+  .user-info {
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  /* Add a subtle indicator that it's clickable */
+  .user-info:hover {
+    background: #E2E8F0;
+  }
+  
+  /* Fix for dropdown positioning on tablets */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .dropdown {
+      min-width: 260px;
+      right: 0;
+      left: auto;
+    }
+  }
+  
+  /* Animation for dropdown */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Ensure dropdown items are visible */
+  .dropdown a,
+  .dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    color: #475569;
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  
+  /* Make the last item (logout) not have a border */
+  .dropdown a:last-child,
+  .dropdown button:last-child {
+    border-bottom: none;
+  }
+  
+  /* Hover effects */
+  .dropdown a:hover,
+  .dropdown button:hover {
+    background: #F1F5F9;
+    color: #6366F1;
+    padding-left: 1.75rem;
+  }
+  
+  /* Ensure dropdown doesn't get hidden behind other elements */
+  .nav-links {
+    z-index: 1000;
+  }
+  
+  /* Fix for full-screen view where dropdown might be cut off */
+  @media (min-width: 1440px) {
+    .dropdown {
+      min-width: 300px;
+    }
+  }

@@ -1,0 +1,192 @@
+
+/* =========================
+   Seller Dashboard Styles
+   ========================= */
+
+   .seller-dashboard {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+  
+  .seller-dashboard h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #222;
+  }
+  
+  /* Loading State (reuse compatible with other pages) */
+  .page-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    height: 60vh;
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* =========================
+     Stats Cards
+     ========================= */
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .stat-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #111;
+  }
+  
+  .stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  /* =========================
+     Dashboard Section
+     ========================= */
+  
+  .dashboard-section {
+    background: #ffffff;
+    padding: 1.8rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .dashboard-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: #222;
+  }
+  
+  /* Empty State */
+  .empty-state {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #f9fafb;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+    color: #666;
+  }
+  
+  /* =========================
+     Products Table
+     ========================= */
+  
+  .products-table {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .product-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+  }
+  
+  .product-row:hover {
+    background: #eef2ff;
+  }
+  
+  .product-row span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* Status Badge */
+  .status-badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #e5e7eb;
+    color: #333;
+    text-transform: capitalize;
+  }
+  
+  /* =========================
+     Buttons (if not global)
+     ========================= */
+  
+  .btn {
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-outline {
+    border: 1px solid #d1d5db;
+    background: transparent;
+    color: #333;
+  }
+  
+  .btn-outline:hover {
+    background: #f3f4f6;
+  }
+  
+  /* =========================
+     Responsive
+     ========================= */
+  
+  @media (max-width: 768px) {
+    .product-row {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+  
+    .product-row span {
+      white-space: normal;
+    }
+  }

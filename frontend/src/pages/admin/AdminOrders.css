@@ -1,0 +1,259 @@
+.admin-orders-page {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+  
+  .filter-btn:hover {
+    background: #f1f5f9;
+  }
+  
+  .filter-btn.active {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+  }
+  
+  .orders-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-header {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px 120px 130px 100px 80px;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  
+  .table-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px 120px 130px 100px 80px;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.3s;
+  }
+  
+  .table-row:hover {
+    background: #f8fafc;
+  }
+  
+  .order-id {
+    font-weight: 600;
+    color: #6366f1;
+  }
+  
+  .customer {
+    font-size: 0.95rem;
+  }
+  
+  .customer small {
+    color: #64748b;
+    font-size: 0.8rem;
+  }
+  
+  .total {
+    font-weight: 600;
+    color: #059669;
+  }
+  
+  .status-select {
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .status-select.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-select.badge-info {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-select.badge-primary {
+    background: #6366f1;
+    color: white;
+  }
+  
+  .status-select.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  
+  .status-select.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  .payment-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    display: inline-block;
+  }
+  
+  .payment-badge.paid {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  
+  .payment-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .payment-badge.failed {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  .payment-badge.refunded {
+    background: #e2e8f0;
+    color: #475569;
+  }
+  
+  .btn-view {
+    padding: 0.4rem 0.8rem;
+    background: #6366f1;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  
+  .btn-view:hover {
+    background: #4f46e5;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  
+  .empty-state h3 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+  
+  .empty-state p {
+    color: #64748b;
+  }
+  
+  .loading-screen {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #6366f1;
+    border-right-color: #8b5cf6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .table-header,
+    .table-row {
+      grid-template-columns: 80px 1fr 80px 100px 110px 80px 70px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .admin-orders-page {
+      padding: 1rem;
+    }
+    
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .filter-buttons {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    
+    .orders-table {
+      overflow-x: auto;
+    }
+    
+    .table-header,
+    .table-row {
+      min-width: 800px;
+    }
+  }

@@ -1,0 +1,9 @@
+.admin-dashboard { padding: 2rem; }
+.admin-dashboard h1 { margin-bottom: 1.5rem; font-size: 1.5rem; color: var(--text); }
+.admin-dashboard .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.admin-dashboard .stat-card { background: var(--card); padding: 1.25rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+.admin-dashboard .stat-value { display: block; font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+.admin-dashboard .stat-label { font-size: 0.9rem; color: var(--text-muted); }
+.admin-dashboard .dashboard-section { background: var(--card); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+.admin-dashboard .dashboard-section h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+.admin-dashboard .muted { color: var(--text-muted); font-size: 0.9rem; }

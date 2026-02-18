@@ -1,0 +1,140 @@
+
+
+/* =========================
+   Admin Sellers Page Styles
+   ========================= */
+
+   .admin-sellers {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+  
+  .admin-sellers h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #222;
+  }
+  
+  /* Loading State */
+  .page-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    height: 60vh;
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #e5e7eb;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Empty State */
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    background: #f9fafb;
+    border-radius: 8px;
+    color: #666;
+    border: 1px dashed #ddd;
+  }
+  
+  /* Sellers List */
+  .sellers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Seller Row */
+  .seller-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  
+  .seller-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  }
+  
+  .seller-row strong {
+    font-size: 1.05rem;
+    color: #111;
+  }
+  
+  .seller-row p {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Actions */
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  /* Buttons */
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  /* Primary Button */
+  .btn-primary {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Outline Button */
+  .btn-outline {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    color: #333;
+  }
+  
+  .btn-outline:hover {
+    background: #f3f4f6;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .seller-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
