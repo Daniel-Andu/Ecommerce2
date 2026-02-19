@@ -341,15 +341,18 @@ function ProductCard({ product, imageUrl, hasImageError, onImageError }) {
           {isOnSale ? (
             <>
               <span className="current-price">
-                ${Number(product.sale_price).toFixed(2)}
+                {Number(product.sale_price).toFixed(2)}
+                birr
               </span>
               <span className="old-price">
-                ${Number(product.base_price).toFixed(2)}
+                {Number(product.base_price).toFixed(2)}
+                birr
               </span>
             </>
           ) : (
             <span className="current-price">
-              ${Number(displayPrice).toFixed(2)}
+              {Number(displayPrice).toFixed(2)}
+              birr
             </span>
           )}
         </div>

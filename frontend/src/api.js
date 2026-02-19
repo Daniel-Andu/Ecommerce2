@@ -1,7 +1,7 @@
-// const API = '/api';
+const API = '/api';
 
 
-const API = process.env.REACT_APP_API_URL || '/api';
+// const API = process.env.REACT_APP_API_URL || '/api';
 
 function getToken() { 
   return localStorage.getItem('token'); 
