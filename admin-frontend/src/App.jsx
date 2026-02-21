@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import ProductManagement from './pages/productManagement';
+import ProductManagement from './pages/ProductManagement.jsx';
 import SellerManagement from './pages/SellerManagement';
 import OrderManagement from './pages/OrderManagement';
 import CategoryManagement from './pages/CategoryManagement';
