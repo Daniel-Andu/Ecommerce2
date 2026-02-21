@@ -1,5 +1,5 @@
-// API Base URL - Change this to your backend URL
-const API = 'http://localhost:5000/api';
+// API Base URL - Use environment variable or fallback to localhost for development
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function getToken() { 
   return localStorage.getItem('token'); 
@@ -312,6 +312,7 @@ export const logout = () => {
   localStorage.removeItem('user');
   // Don't remove cart session on logout
 };
+
 
 
 
