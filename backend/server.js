@@ -29,9 +29,26 @@ app.use(helmet({
   contentSecurityPolicy: false
 }));
 
-// CORS CONFIGURATION - Allow multiple origins
+// CORS CONFIGURATION - Allow multiple origins (local dev + production)
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'http://localhost:3001', 
+  'http://localhost:3002',
+  'https://your-frontend.vercel.app', // Replace with your actual Vercel URL after deployment
+  'https://e-commerce-backend-3i6r.onrender.com' // Backend itself
+];
+
 app.use(cors({ 
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Cart-Session']
@@ -87,5 +104,5 @@ app.listen(PORT, () => {
   console.log('  Server running on:');
   console.log(`   Local: http://localhost:${PORT}`);
   console.log(`   Payment API: http://localhost:${PORT}/api/payment`);
-  console.log(`   CORS allowed origins: http://localhost:3000, http://localhost:3001, http://localhost:3002`);
+  console.log(`   CORS allowed origins:`, allowedOrigins);
 });
