@@ -3,7 +3,7 @@ const pool = require('../config/db');
 const { auth } = require('../middleware/auth');
 const router = express.Router();
 
-// Create order
+// Create order - COMPLETELY FIXED VERSION
 router.post('/', auth, async (req, res) => {
   const connection = await pool.getConnection();
   try {
@@ -11,12 +11,25 @@ router.post('/', auth, async (req, res) => {
     
     const { 
       shipping_address_id, 
-      shipping_method = 'standard',
       payment_method = 'chapa',
-      cart_session_id 
+      notes 
     } = req.body;
     
     const userId = req.user.id;
+    
+    console.log('Creating order for user:', userId, 'with address:', shipping_address_id);
+    console.log('Payment method:', payment_method);
+    
+    // Validate required fields
+    if (!shipping_address_id) {
+      await connection.rollback();
+      return res.status(400).json({ message: 'Shipping address is required' });
+    }
+    
+    if (!payment_method) {
+      await connection.rollback();
+      return res.status(400).json({ message: 'Payment method is required' });
+    }
     
     // Validate shipping address
     const [address] = await connection.query(
@@ -29,36 +42,13 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ message: 'Invalid shipping address' });
     }
     
-    // Get cart
-    let cartId;
-    if (cart_session_id) {
-      const [cartRows] = await connection.query(
-        'SELECT id FROM carts WHERE session_id = ?', 
-        [cart_session_id]
-      );
-      cartId = cartRows[0]?.id;
-    } else {
-      const [cartRows] = await connection.query(
-        'SELECT id FROM carts WHERE user_id = ?', 
-        [userId]
-      );
-      cartId = cartRows[0]?.id;
-    }
-    
-    if (!cartId) {
-      await connection.rollback();
-      return res.status(400).json({ message: 'Cart is empty' });
-    }
-    
     // Get cart items with product details
     const [cartItems] = await connection.query(
-      `SELECT ci.id, ci.product_id, ci.variant_id, ci.quantity, 
-              p.name, p.sku, p.base_price, p.sale_price, p.seller_id,
-              p.stock_quantity
-       FROM cart_items ci 
-       JOIN products p ON ci.product_id = p.id 
-       WHERE ci.cart_id = ?`,
-      [cartId]
+      `SELECT c.*, p.name, p.base_price, p.sale_price, p.stock_quantity, p.seller_id, p.sku
+       FROM cart c
+       JOIN products p ON c.product_id = p.id
+       WHERE c.user_id = ?`,
+      [userId]
     );
     
     if (!cartItems.length) {
@@ -71,14 +61,18 @@ router.post('/', auth, async (req, res) => {
       if (item.quantity > item.stock_quantity) {
         await connection.rollback();
         return res.status(400).json({ 
-          message: `Insufficient stock for ${item.name}. Available: ${item.stock_quantity}` 
+          message: `Insufficient stock for ${item.name}. Available: ${item.stock_quantity}`,
+          item: item.name,
+          available: item.stock_quantity,
+          requested: item.quantity
         });
       }
     }
     
     // Generate order number
-    const orderNumber = 'ORD-' + Date.now() + '-' + 
-                        Math.random().toString(36).substring(2, 8).toUpperCase();
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const orderNumber = `ORD-${timestamp}-${random}`;
     
     // Calculate totals
     const subtotal = cartItems.reduce((sum, item) => {
@@ -86,51 +80,56 @@ router.post('/', auth, async (req, res) => {
       return sum + (price * item.quantity);
     }, 0);
     
-    const shippingCost = shipping_method === 'express' ? 10.00 : 5.00;
+    const shippingCost = 5.00; // Default shipping cost
     const tax = subtotal * 0.15; // 15% tax
     const total = subtotal + shippingCost + tax;
     
-    // Create order
+    console.log('Order totals:', { subtotal, shippingCost, tax, total });
+    
+    // Get seller_id from first product (all products must have same seller for the order)
+    const sellerId = cartItems[0]?.seller_id || null;
+    
+    // Insert order with ALL required fields
     const [orderResult] = await connection.query(
       `INSERT INTO orders 
-       (order_number, user_id, status, subtotal, shipping_cost, tax, total, 
-        shipping_address_id, shipping_method, payment_method, payment_status, created_at, updated_at) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+       (user_id, seller_id, order_number, subtotal, shipping_cost, tax, total, 
+        status, payment_status, payment_method, shipping_address_id, notes, created_at, updated_at) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
       [
-        orderNumber, 
         userId, 
+        sellerId,
+        orderNumber, 
+        subtotal.toFixed(2), 
+        shippingCost.toFixed(2), 
+        tax.toFixed(2), 
+        total.toFixed(2), 
         'pending', 
-        subtotal, 
-        shippingCost, 
-        tax, 
-        total,
+        'pending', 
+        payment_method,
         shipping_address_id, 
-        shipping_method, 
-        payment_method, 
-        'pending'
+        notes || null
       ]
     );
     
     const orderId = orderResult.insertId;
     
-    // Create order items and update stock
+    // Create order items - FIXED with correct column names from your table
     for (const item of cartItems) {
       const unitPrice = parseFloat(item.sale_price || item.base_price);
       const totalPrice = unitPrice * item.quantity;
       
       await connection.query(
         `INSERT INTO order_items 
-         (order_id, product_id, variant_id, product_name, sku, quantity, unit_price, total_price, created_at) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+         (order_id, product_id, product_name, sku, quantity, unit_price, total_price, created_at) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
         [
           orderId, 
-          item.product_id, 
-          item.variant_id, 
-          item.name, 
-          item.sku, 
+          item.product_id,
+          item.name,                    // product_name
+          item.sku || null,              // sku (if available)
           item.quantity, 
-          unitPrice, 
-          totalPrice
+          unitPrice.toFixed(2),          // unit_price
+          totalPrice.toFixed(2)           // total_price
         ]
       );
       
@@ -142,27 +141,27 @@ router.post('/', auth, async (req, res) => {
     }
     
     // Clear cart
-    await connection.query('DELETE FROM cart_items WHERE cart_id = ?', [cartId]);
-    await connection.query('DELETE FROM carts WHERE id = ?', [cartId]);
+    await connection.query('DELETE FROM cart WHERE user_id = ?', [userId]);
     
     await connection.commit();
     
-    // Get the created order
-    const [order] = await connection.query(
-      'SELECT * FROM orders WHERE id = ?', 
-      [orderId]
-    );
+    console.log('Order created successfully with ID:', orderId);
     
     res.status(201).json({ 
       success: true,
-      message: 'Order placed successfully', 
-      order: order[0] 
+      message: 'Order created successfully', 
+      id: orderId,
+      order_number: orderNumber,
+      total: total.toFixed(2)
     });
     
   } catch (err) {
     await connection.rollback();
     console.error('Create order error:', err);
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ 
+      success: false,
+      message: err.message || 'Failed to create order' 
+    });
   } finally {
     connection.release();
   }
@@ -172,7 +171,7 @@ router.post('/', auth, async (req, res) => {
 router.get('/my', auth, async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT id, order_number, status, subtotal, shipping_cost, tax, total, 
+      `SELECT id, order_number, status, total, 
               payment_status, payment_method, created_at 
        FROM orders 
        WHERE user_id = ? 
@@ -186,11 +185,15 @@ router.get('/my', auth, async (req, res) => {
   }
 });
 
-// Get single order
+// Get single order - FIXED VERSION
 router.get('/:id', auth, async (req, res) => {
   try {
     const [orders] = await pool.query(
-      'SELECT * FROM orders WHERE id = ? AND user_id = ?', 
+      `SELECT o.*, 
+              a.address_line1, a.address_line2, a.city, a.state, a.postal_code, a.country, a.phone
+       FROM orders o
+       LEFT JOIN addresses a ON o.shipping_address_id = a.id
+       WHERE o.id = ? AND o.user_id = ?`, 
       [req.params.id, req.user.id]
     );
     
@@ -198,20 +201,18 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
     
+    // FIX: Use pool.query, not connection.query
     const [items] = await pool.query(
-      'SELECT * FROM order_items WHERE order_id = ?', 
+      `SELECT oi.*, p.name, p.slug 
+       FROM order_items oi
+       JOIN products p ON oi.product_id = p.id
+       WHERE oi.order_id = ?`, 
       [req.params.id]
-    );
-    
-    const [address] = await pool.query(
-      'SELECT * FROM addresses WHERE id = ?', 
-      [orders[0].shipping_address_id]
     );
     
     res.json({ 
       ...orders[0], 
-      items, 
-      address: address[0] || null 
+      items
     });
   } catch (err) {
     console.error('Get order error:', err);
@@ -219,6 +220,83 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+
+
+// Cancel order - FIXED VERSION
+router.patch('/:id/cancel', auth, async (req, res) => {
+  const connection = await pool.getConnection(); // Define connection here
+  try {
+    await connection.beginTransaction();
+    
+    const [orders] = await connection.query(
+      'SELECT * FROM orders WHERE id = ? AND user_id = ?',
+      [req.params.id, req.user.id]
+    );
+    
+    if (!orders.length) {
+      await connection.rollback();
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    
+    const order = orders[0];
+    
+    if (order.status !== 'pending') {
+      await connection.rollback();
+      return res.status(400).json({ message: 'Order cannot be cancelled' });
+    }
+    
+    await connection.query(
+      'UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?',
+      ['cancelled', req.params.id]
+    );
+    
+    const [items] = await connection.query(
+      'SELECT * FROM order_items WHERE order_id = ?',
+      [req.params.id]
+    );
+    
+    for (const item of items) {
+      await connection.query(
+        'UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?',
+        [item.quantity, item.product_id]
+      );
+    }
+    
+    await connection.commit();
+    
+    res.json({ 
+      success: true,
+      message: 'Order cancelled successfully' 
+    });
+    
+  } catch (err) {
+    await connection.rollback();
+    console.error('Cancel order error:', err);
+    res.status(500).json({ message: err.message });
+  } finally {
+    connection.release();
+  }
+});
+
+
+
+// Track order
+router.get('/:id/track', auth, async (req, res) => {
+  try {
+    const [orders] = await pool.query(
+      'SELECT status, created_at, updated_at FROM orders WHERE id = ? AND user_id = ?',
+      [req.params.id, req.user.id]
+    );
+    
+    if (!orders.length) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    
+    res.json(orders[0]);
+  } catch (err) {
+    console.error('Track order error:', err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
-
-

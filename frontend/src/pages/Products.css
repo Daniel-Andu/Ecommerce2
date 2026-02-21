@@ -199,6 +199,7 @@
   margin-bottom: 2rem;
 }
 
+/* Product Card - Fixed proportions */
 .product-card {
   background: white;
   border-radius: var(--radius-lg);
@@ -209,6 +210,8 @@
   transition: all 0.3s;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  aspect-ratio: 3/4; /* Fixed aspect ratio for entire card */
 }
 
 .product-card:hover {
@@ -216,32 +219,46 @@
   box-shadow: var(--shadow-xl);
 }
 
-.product-image {
+/* Image Container - Takes exactly 50% of card height */
+.product-image-container {
   position: relative;
-  aspect-ratio: 1;
+  width: 100%;
+  height: 50%; /* Exactly half of the card */
   overflow: hidden;
   background: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
 }
 
-.product-image img {
+/* Image styling */
+.product-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s;
+  object-fit: cover; /* Cover ensures image fills the space */
+  object-position: center;
+  transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-image img {
-  transform: scale(1.1);
+.product-card:hover .product-image {
+  transform: scale(1.08);
 }
 
+/* Alternative: use contain if you prefer to see full image */
+.product-image.contain {
+  object-fit: contain;
+  background: white;
+}
+
+/* Placeholder styling */
 .product-image-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: var(--gray-100);
   color: var(--gray-400);
+  gap: 0.5rem;
 }
 
 .product-image-placeholder svg {
@@ -250,62 +267,100 @@
   stroke: currentColor;
 }
 
+.product-image-placeholder span {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+/* Badge styling */
 .product-badge {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   background: var(--danger);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  z-index: 1;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.product-badge.sale {
+  background: var(--success, #28a745);
+}
+
+.product-badge.out-of-stock {
+  background: var(--gray-600);
+}
+
+/* Product Info - Takes remaining 50% of card height */
 .product-info {
-  padding: 1.5rem;
-  flex: 1;
+  padding: 1rem 1rem 1.25rem;
+  height: 50%; /* Exactly half of the card */
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: white;
 }
 
 .product-title {
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin: 0;
   color: var(--gray-800);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.5;
+  line-height: 1.4;
+  max-height: 2.8em; /* 2 lines * 1.4 line-height */
 }
 
 .product-seller {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--gray-500);
-  margin-bottom: 0.5rem;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.product-price {
+.product-price-section {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  gap: 0.5rem;
+  margin-top: auto; /* Pushes price to bottom of the info section */
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
 }
 
 .current-price {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--primary);
+  line-height: 1.2;
 }
 
 .old-price {
   font-size: 0.9rem;
   color: var(--gray-400);
   text-decoration: line-through;
+}
+
+/* Optional rating section if you have ratings */
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+.stars {
+  color: var(--warning, #ffc107);
+  letter-spacing: 1px;
 }
 
 /* Buttons */
@@ -401,11 +456,17 @@
   font-size: 0.95rem;
 }
 
-/* CSS Variables */
+/* CSS Variables - Expanded */
 :root {
+  /* Colors */
   --primary: #2c3e50;
   --primary-dark: #1e2b37;
   --danger: #e74c3c;
+  --success: #28a745;
+  --warning: #ffc107;
+  --info: #17a2b8;
+  
+  /* Grayscale */
   --gray-100: #f8f9fa;
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
@@ -414,14 +475,22 @@
   --gray-600: #6c757d;
   --gray-700: #495057;
   --gray-800: #343a40;
+  --gray-900: #212529;
+  
+  /* Border Radius */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
+  --radius-xl: 12px;
+  
+  /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-  --shadow-xl: 0 10px 30px rgba(0,0,0,0.15);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
 }
 
-/* Responsive */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .products-layout {
     grid-template-columns: 240px 1fr;
@@ -461,6 +530,19 @@
     flex-direction: column;
     text-align: center;
   }
+  
+  /* Adjust card proportions for mobile */
+  .product-card {
+    aspect-ratio: 2/3; /* Slightly taller on mobile */
+  }
+  
+  .product-info {
+    padding: 0.875rem 0.875rem 1rem;
+  }
+  
+  .current-price {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -484,6 +566,42 @@
   }
   
   .product-info {
-    padding: 1rem;
+    padding: 0.75rem 0.75rem 0.875rem;
   }
+  
+  .product-title {
+    font-size: 0.95rem;
+  }
+  
+  .current-price {
+    font-size: 1rem;
+  }
+}
+
+/* Optional: Add these utility classes if you need them */
+.product-image.contain {
+  object-fit: contain;
+  background: white;
+}
+
+.product-image.cover {
+  object-fit: cover;
+}
+
+/* Optional: Add a subtle gradient overlay at the bottom of image */
+.product-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(to top, rgba(0,0,0,0.02), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.product-card:hover .product-image-container::after {
+  opacity: 1;
 }

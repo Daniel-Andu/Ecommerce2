@@ -1,236 +1,532 @@
-
-
 const express = require('express');
 const pool = require('../config/db');
-const { optionalAuth } = require('../middleware/auth');
-const crypto = require('crypto');
+const { auth, optionalAuth } = require('../middleware/auth');
 const router = express.Router();
 
-function getCartIdentifier(req) {
-  if (req.user) return { type: 'user', value: req.user.id };
-  
-  let sessionId = req.headers['x-cart-session'];
-  
-  if (!sessionId && req.body && req.body.session_id) {
-    sessionId = req.body.session_id;
-  }
-  
-  // Generate new session if none exists
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-  }
-  
-  return { type: 'session', value: sessionId };
-}
-
-async function getOrCreateCart(req) {
-  const ident = getCartIdentifier(req);
-  let cartId;
-  
-  if (ident.type === 'user') {
-    // Check if user has a cart
-    const [rows] = await pool.query(
-      'SELECT id FROM carts WHERE user_id = ?', 
-      [ident.value]
-    );
-    
-    if (rows.length) {
-      cartId = rows[0].id;
-    } else {
-      // Check if there's a session cart to merge
-      const sessionId = req.headers['x-cart-session'];
-      if (sessionId) {
-        const [sessionCart] = await pool.query(
-          'SELECT id FROM carts WHERE session_id = ?', 
-          [sessionId]
-        );
-        
-        if (sessionCart.length) {
-          // Convert session cart to user cart
-          await pool.query(
-            'UPDATE carts SET user_id = ?, session_id = NULL WHERE id = ?', 
-            [ident.value, sessionCart[0].id]
-          );
-          cartId = sessionCart[0].id;
-        }
-      }
-      
-      if (!cartId) {
-        const [result] = await pool.query(
-          'INSERT INTO carts (user_id) VALUES (?)', 
-          [ident.value]
-        );
-        cartId = result.insertId;
-      }
-    }
-  } else {
-    const [rows] = await pool.query(
-      'SELECT id FROM carts WHERE session_id = ?', 
-      [ident.value]
-    );
-    
-    if (rows.length) {
-      cartId = rows[0].id;
-    } else {
-      const [result] = await pool.query(
-        'INSERT INTO carts (session_id) VALUES (?)', 
-        [ident.value]
-      );
-      cartId = result.insertId;
-    }
-  }
-  
-  return { cartId, sessionId: ident.type === 'session' ? ident.value : null };
-}
-
-// Get cart contents
+// Get cart items
 router.get('/', optionalAuth, async (req, res) => {
   try {
-    const { cartId, sessionId } = await getOrCreateCart(req);
+    let cartItems = [];
     
-    const [items] = await pool.query(
-      `SELECT ci.id, ci.product_id, ci.variant_id, ci.quantity, 
-              p.name, p.slug, p.base_price, p.sale_price 
-       FROM cart_items ci 
-       JOIN products p ON ci.product_id = p.id 
-       WHERE ci.cart_id = ?`,
-      [cartId]
-    );
-    
-    let imgMap = {};
-    if (items.length) {
-      const productIds = items.map(i => i.product_id);
-      const [images] = await pool.query(
-        'SELECT product_id, image_url FROM product_images WHERE product_id IN (?) ORDER BY sort_order',
-        [productIds]
+    if (req.user) {
+      // Logged in user - get from database
+      const [rows] = await pool.query(
+        `SELECT c.*, 
+                p.id as product_id,
+                p.name, 
+                p.base_price, 
+                p.sale_price, 
+                p.stock_quantity,
+                p.status, 
+                p.slug,
+                p.is_active
+         FROM cart c
+         JOIN products p ON c.product_id = p.id
+         WHERE c.user_id = ?`,
+        [req.user.id]
       );
-      images.forEach(i => { 
-        imgMap[i.product_id] = i.image_url; 
-      });
+      cartItems = rows;
+    } else {
+      // Guest user - get from session
+      const sessionId = req.headers['x-cart-session'];
+      if (sessionId) {
+        const [rows] = await pool.query(
+          `SELECT c.*, 
+                  p.id as product_id,
+                  p.name, 
+                  p.base_price, 
+                  p.sale_price, 
+                  p.stock_quantity,
+                  p.status, 
+                  p.slug,
+                  p.is_active
+           FROM cart_sessions c
+           JOIN products p ON c.product_id = p.id
+           WHERE c.session_id = ?`,
+          [sessionId]
+        );
+        cartItems = rows;
+      }
     }
     
-    const cartItems = items.map(i => ({
-      ...i,
-      price: i.sale_price || i.base_price,
-      image: imgMap[i.product_id],
-      total: (parseFloat(i.sale_price || i.base_price) * i.quantity).toFixed(2)
+    // Get images for each product - FIXED: removed is_primary, using sort_order
+    const items = await Promise.all(cartItems.map(async (item) => {
+      // Get the primary image (lowest sort_order) for this product
+      const [images] = await pool.query(
+        `SELECT image_url, alt_text 
+         FROM product_images 
+         WHERE product_id = ? 
+         ORDER BY sort_order ASC, id ASC 
+         LIMIT 1`,
+        [item.product_id]
+      );
+      
+      const image = images.length > 0 ? images[0].image_url : null;
+      
+      return {
+        id: item.id,
+        product_id: item.product_id,
+        name: item.name || 'Unknown Product',
+        price: parseFloat(item.sale_price || item.base_price || 0),
+        original_price: parseFloat(item.base_price || 0),
+        quantity: item.quantity || 1,
+        image: image,
+        stock: item.stock_quantity || 0,
+        slug: item.slug || '',
+        in_stock: (item.stock_quantity || 0) >= (item.quantity || 1),
+        available_stock: item.stock_quantity || 0,
+        status: item.status,
+        is_active: item.is_active
+      };
     }));
     
-    const subtotal = cartItems.reduce((sum, i) => sum + parseFloat(i.total), 0);
+    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const outOfStockCount = items.filter(item => !item.in_stock).length;
     
-    res.json({ 
-      cartId, 
-      sessionId, 
-      items: cartItems, 
-      subtotal: subtotal.toFixed(2) 
+    res.json({
+      items,
+      subtotal: parseFloat(subtotal),
+      total: parseFloat(subtotal),
+      item_count: items.length,
+      out_of_stock_count: outOfStockCount,
+      has_out_of_stock: outOfStockCount > 0
     });
-  } catch (err) { 
+  } catch (err) {
     console.error('Get cart error:', err);
-    res.status(500).json({ message: err.message }); 
+    res.status(500).json({ message: err.message });
   }
 });
 
 // Add item to cart
 router.post('/items', optionalAuth, async (req, res) => {
+  const { product_id, quantity = 1 } = req.body;
+  
+  if (!product_id) {
+    return res.status(400).json({ message: 'Product ID is required' });
+  }
+
+  const connection = await pool.getConnection();
   try {
-    const { cartId, sessionId } = await getOrCreateCart(req);
-    const { product_id, variant_id, quantity = 1 } = req.body;
-    
-    if (!product_id) {
-      return res.status(400).json({ message: 'Product ID is required' });
-    }
-    
-    // Check if product exists and is approved
-    const [product] = await pool.query(
-      'SELECT id FROM products WHERE id = ? AND status = ? AND is_active = 1', 
-      [product_id, 'approved']
+    await connection.beginTransaction();
+
+    // Check if product exists and has stock
+    const [products] = await connection.query(
+      `SELECT id, name, stock_quantity, status, is_active 
+       FROM products 
+       WHERE id = ?`,
+      [product_id]
     );
-    
-    if (!product.length) {
-      return res.status(404).json({ message: 'Product not found or unavailable' });
+
+    if (products.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ message: 'Product not found' });
     }
-    
-    // Check if item already in cart
-    const [existing] = await pool.query(
-      `SELECT id FROM cart_items 
-       WHERE cart_id = ? AND product_id = ? 
-       AND (variant_id = ? OR (variant_id IS NULL AND ? IS NULL))`,
-      [cartId, product_id, variant_id || null, variant_id || null]
-    );
-    
-    const qty = Math.max(1, parseInt(quantity, 10) || 1);
-    
-    if (existing.length) {
-      await pool.query(
-        'UPDATE cart_items SET quantity = quantity + ? WHERE id = ?', 
-        [qty, existing[0].id]
+
+    const product = products[0];
+
+    // Check if product is available
+    if (product.status !== 'approved') {
+      await connection.rollback();
+      return res.status(400).json({ message: 'Product is not approved for sale' });
+    }
+
+    if (!product.is_active) {
+      await connection.rollback();
+      return res.status(400).json({ message: 'Product is not active' });
+    }
+
+    if (product.stock_quantity < quantity) {
+      await connection.rollback();
+      return res.status(400).json({ 
+        message: `Only ${product.stock_quantity} items available in stock` 
+      });
+    }
+
+    if (req.user) {
+      // Logged in user - add to database cart
+      const [existing] = await connection.query(
+        'SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?',
+        [req.user.id, product_id]
       );
+
+      if (existing.length > 0) {
+        // Update existing cart item
+        const newQuantity = existing[0].quantity + quantity;
+        if (newQuantity > product.stock_quantity) {
+          await connection.rollback();
+          return res.status(400).json({ 
+            message: `Cannot add more than ${product.stock_quantity} items` 
+          });
+        }
+        await connection.query(
+          'UPDATE cart SET quantity = ? WHERE id = ?',
+          [newQuantity, existing[0].id]
+        );
+      } else {
+        // Insert new cart item
+        await connection.query(
+          'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)',
+          [req.user.id, product_id, quantity]
+        );
+      }
     } else {
-      await pool.query(
-        'INSERT INTO cart_items (cart_id, product_id, variant_id, quantity) VALUES (?, ?, ?, ?)',
-        [cartId, product_id, variant_id || null, qty]
+      // Guest user - use session
+      const sessionId = req.headers['x-cart-session'];
+      if (!sessionId) {
+        await connection.rollback();
+        return res.status(400).json({ message: 'Cart session required' });
+      }
+
+      const [existing] = await connection.query(
+        'SELECT id, quantity FROM cart_sessions WHERE session_id = ? AND product_id = ?',
+        [sessionId, product_id]
       );
+
+      if (existing.length > 0) {
+        // Update existing cart item
+        const newQuantity = existing[0].quantity + quantity;
+        if (newQuantity > product.stock_quantity) {
+          await connection.rollback();
+          return res.status(400).json({ 
+            message: `Cannot add more than ${product.stock_quantity} items` 
+          });
+        }
+        await connection.query(
+          'UPDATE cart_sessions SET quantity = ? WHERE id = ?',
+          [newQuantity, existing[0].id]
+        );
+      } else {
+        // Insert new cart item
+        await connection.query(
+          'INSERT INTO cart_sessions (session_id, product_id, quantity) VALUES (?, ?, ?)',
+          [sessionId, product_id, quantity]
+        );
+      }
     }
-    
-    res.json({ message: 'Added to cart', sessionId });
-  } catch (err) { 
+
+    await connection.commit();
+    res.status(201).json({ message: 'Item added to cart' });
+  } catch (err) {
+    await connection.rollback();
     console.error('Add to cart error:', err);
-    res.status(500).json({ message: err.message }); 
+    res.status(500).json({ message: err.message });
+  } finally {
+    connection.release();
   }
 });
 
-// Update item quantity
-router.patch('/items/:itemId', optionalAuth, async (req, res) => {
+// Update cart item quantity
+router.patch('/items/:id', optionalAuth, async (req, res) => {
+  const { quantity } = req.body;
+  const itemId = req.params.id;
+
+  if (!quantity || quantity < 1) {
+    return res.status(400).json({ message: 'Valid quantity is required' });
+  }
+
+  const connection = await pool.getConnection();
   try {
-    const { cartId } = await getOrCreateCart(req);
-    const quantity = parseInt(req.body.quantity, 10);
-    
-    if (isNaN(quantity) || quantity < 0) {
-      return res.status(400).json({ message: 'Invalid quantity' });
-    }
-    
-    if (quantity === 0) {
-      await pool.query(
-        'DELETE FROM cart_items WHERE id = ? AND cart_id = ?', 
-        [req.params.itemId, cartId]
+    await connection.beginTransaction();
+
+    let cartItem;
+    if (req.user) {
+      [cartItem] = await connection.query(
+        `SELECT c.*, p.stock_quantity 
+         FROM cart c 
+         JOIN products p ON c.product_id = p.id 
+         WHERE c.id = ? AND c.user_id = ?`,
+        [itemId, req.user.id]
       );
-      return res.json({ message: 'Item removed' });
+    } else {
+      const sessionId = req.headers['x-cart-session'];
+      if (!sessionId) {
+        await connection.rollback();
+        return res.status(400).json({ message: 'Cart session required' });
+      }
+      [cartItem] = await connection.query(
+        `SELECT c.*, p.stock_quantity 
+         FROM cart_sessions c 
+         JOIN products p ON c.product_id = p.id 
+         WHERE c.id = ? AND c.session_id = ?`,
+        [itemId, sessionId]
+      );
     }
-    
-    const [result] = await pool.query(
-      'UPDATE cart_items SET quantity = ? WHERE id = ? AND cart_id = ?', 
-      [quantity, req.params.itemId, cartId]
-    );
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Item not found' });
+
+    if (!cartItem || cartItem.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ message: 'Cart item not found' });
     }
-    
-    res.json({ message: 'Cart updated' });
-  } catch (err) { 
+
+    if (quantity > cartItem[0].stock_quantity) {
+      await connection.rollback();
+      return res.status(400).json({ 
+        message: `Only ${cartItem[0].stock_quantity} items available` 
+      });
+    }
+
+    if (req.user) {
+      await connection.query(
+        'UPDATE cart SET quantity = ? WHERE id = ?',
+        [quantity, itemId]
+      );
+    } else {
+      await connection.query(
+        'UPDATE cart_sessions SET quantity = ? WHERE id = ?',
+        [quantity, itemId]
+      );
+    }
+
+    await connection.commit();
+    res.json({ message: 'Cart updated successfully' });
+  } catch (err) {
+    await connection.rollback();
     console.error('Update cart error:', err);
-    res.status(500).json({ message: err.message }); 
+    res.status(500).json({ message: err.message });
+  } finally {
+    connection.release();
   }
 });
 
 // Remove item from cart
-router.delete('/items/:itemId', optionalAuth, async (req, res) => {
+router.delete('/items/:id', optionalAuth, async (req, res) => {
+  const itemId = req.params.id;
+
   try {
-    const { cartId } = await getOrCreateCart(req);
-    
-    const [result] = await pool.query(
-      'DELETE FROM cart_items WHERE id = ? AND cart_id = ?', 
-      [req.params.itemId, cartId]
-    );
-    
+    let result;
+    if (req.user) {
+      [result] = await pool.query(
+        'DELETE FROM cart WHERE id = ? AND user_id = ?',
+        [itemId, req.user.id]
+      );
+    } else {
+      const sessionId = req.headers['x-cart-session'];
+      if (!sessionId) {
+        return res.status(400).json({ message: 'Cart session required' });
+      }
+      [result] = await pool.query(
+        'DELETE FROM cart_sessions WHERE id = ? AND session_id = ?',
+        [itemId, sessionId]
+      );
+    }
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Item not found' });
     }
-    
-    res.json({ message: 'Item removed' });
-  } catch (err) { 
+
+    res.json({ message: 'Item removed from cart' });
+  } catch (err) {
     console.error('Remove cart item error:', err);
-    res.status(500).json({ message: err.message }); 
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Check stock status
+router.get('/check-stock', optionalAuth, async (req, res) => {
+  try {
+    let cartItems = [];
+    
+    if (req.user) {
+      const [rows] = await pool.query(
+        `SELECT c.*, p.name, p.stock_quantity
+         FROM cart c
+         JOIN products p ON c.product_id = p.id
+         WHERE c.user_id = ?`,
+        [req.user.id]
+      );
+      cartItems = rows;
+    } else {
+      const sessionId = req.headers['x-cart-session'];
+      if (sessionId) {
+        const [rows] = await pool.query(
+          `SELECT c.*, p.name, p.stock_quantity
+           FROM cart_sessions c
+           JOIN products p ON c.product_id = p.id
+           WHERE c.session_id = ?`,
+          [sessionId]
+        );
+        cartItems = rows;
+      }
+    }
+    
+    const issues = cartItems
+      .filter(item => item.stock_quantity < item.quantity)
+      .map(item => ({
+        product_id: item.product_id,
+        name: item.name,
+        requested: item.quantity,
+        available: item.stock_quantity
+      }));
+    
+    res.json({
+      has_issues: issues.length > 0,
+      issues: issues
+    });
+  } catch (err) {
+    console.error('Check stock error:', err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Auto-fix cart quantities
+router.post('/auto-fix', optionalAuth, async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    
+    let cartItems = [];
+    const fixes = [];
+
+    if (req.user) {
+      const [rows] = await connection.query(
+        `SELECT c.id, c.product_id, c.quantity, p.stock_quantity, p.name
+         FROM cart c
+         JOIN products p ON c.product_id = p.id
+         WHERE c.user_id = ?`,
+        [req.user.id]
+      );
+      cartItems = rows;
+
+      for (const item of cartItems) {
+        if (item.stock_quantity < item.quantity) {
+          if (item.stock_quantity === 0) {
+            await connection.query('DELETE FROM cart WHERE id = ?', [item.id]);
+            fixes.push({
+              product_id: item.product_id,
+              name: item.name,
+              action: 'removed',
+              reason: 'out of stock'
+            });
+          } else {
+            await connection.query(
+              'UPDATE cart SET quantity = ? WHERE id = ?',
+              [item.stock_quantity, item.id]
+            );
+            fixes.push({
+              product_id: item.product_id,
+              name: item.name,
+              action: 'updated',
+              old_quantity: item.quantity,
+              new_quantity: item.stock_quantity
+            });
+          }
+        }
+      }
+    } else {
+      const sessionId = req.headers['x-cart-session'];
+      if (sessionId) {
+        const [rows] = await connection.query(
+          `SELECT c.id, c.product_id, c.quantity, p.stock_quantity, p.name
+           FROM cart_sessions c
+           JOIN products p ON c.product_id = p.id
+           WHERE c.session_id = ?`,
+          [sessionId]
+        );
+        cartItems = rows;
+
+        for (const item of cartItems) {
+          if (item.stock_quantity < item.quantity) {
+            if (item.stock_quantity === 0) {
+              await connection.query('DELETE FROM cart_sessions WHERE id = ?', [item.id]);
+              fixes.push({
+                product_id: item.product_id,
+                name: item.name,
+                action: 'removed',
+                reason: 'out of stock'
+              });
+            } else {
+              await connection.query(
+                'UPDATE cart_sessions SET quantity = ? WHERE id = ?',
+                [item.stock_quantity, item.id]
+              );
+              fixes.push({
+                product_id: item.product_id,
+                name: item.name,
+                action: 'updated',
+                old_quantity: item.quantity,
+                new_quantity: item.stock_quantity
+              });
+            }
+          }
+        }
+      }
+    }
+
+    await connection.commit();
+    res.json({ 
+      message: 'Cart auto-fixed', 
+      fixes,
+      fixed: fixes.length > 0 
+    });
+  } catch (err) {
+    await connection.rollback();
+    console.error('Auto-fix error:', err);
+    res.status(500).json({ message: err.message });
+  } finally {
+    connection.release();
+  }
+});
+
+// Remove out of stock items
+router.post('/remove-out-of-stock', optionalAuth, async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    
+    let removed = [];
+
+    if (req.user) {
+      const [items] = await connection.query(
+        `SELECT c.id, p.name
+         FROM cart c
+         JOIN products p ON c.product_id = p.id
+         WHERE c.user_id = ? AND p.stock_quantity < c.quantity`,
+        [req.user.id]
+      );
+
+      if (items.length > 0) {
+        await connection.query(
+          `DELETE c FROM cart c
+           JOIN products p ON c.product_id = p.id
+           WHERE c.user_id = ? AND p.stock_quantity < c.quantity`,
+          [req.user.id]
+        );
+      }
+      removed = items;
+    } else {
+      const sessionId = req.headers['x-cart-session'];
+      if (sessionId) {
+        const [items] = await connection.query(
+          `SELECT c.id, p.name
+           FROM cart_sessions c
+           JOIN products p ON c.product_id = p.id
+           WHERE c.session_id = ? AND p.stock_quantity < c.quantity`,
+          [sessionId]
+        );
+
+        if (items.length > 0) {
+          await connection.query(
+            `DELETE c FROM cart_sessions c
+             JOIN products p ON c.product_id = p.id
+             WHERE c.session_id = ? AND p.stock_quantity < c.quantity`,
+            [sessionId]
+          );
+        }
+        removed = items;
+      }
+    }
+
+    await connection.commit();
+    res.json({ 
+      message: 'Out of stock items removed',
+      removed_count: removed.length,
+      removed_items: removed 
+    });
+  } catch (err) {
+    await connection.rollback();
+    console.error('Remove out of stock error:', err);
+    res.status(500).json({ message: err.message });
+  } finally {
+    connection.release();
   }
 });
 

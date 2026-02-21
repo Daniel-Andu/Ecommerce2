@@ -1,0 +1,302 @@
+
+
+.order-management {
+    padding: 0;
+  }
+  
+  .page-header {
+    margin-bottom: 20px;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+  }
+  
+  .filter-bar {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 200px;
+    font-size: 14px;
+  }
+  
+  .btn-refresh {
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .btn-refresh:hover {
+    background: #0056b3;
+  }
+  
+  .btn-view {
+    padding: 5px 10px;
+    background: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  
+  .btn-view:hover {
+    background: #138496;
+  }
+  
+  /* Modal Styles */
+  .order-details-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  
+  .modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+  }
+  
+  .btn-close:hover {
+    color: #333;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .order-info,
+  .shipping-info,
+  .order-items,
+  .order-actions {
+    margin-bottom: 30px;
+  }
+  
+  .order-info h3,
+  .shipping-info h3,
+  .order-items h3,
+  .order-actions h3 {
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .info-item label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .info-item span {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .shipping-info p {
+    margin: 5px 0;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  /* Items Table */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .items-table th {
+    background: #f8f9fa;
+    padding: 10px;
+    text-align: left;
+    font-size: 13px;
+    color: #666;
+  }
+  
+  .items-table td {
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
+  }
+  
+  .items-table tfoot td {
+    padding: 15px 10px;
+    font-size: 16px;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  /* Payment Status */
+  .payment-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .payment-status.paid {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  .payment-status.pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+  
+  .payment-status.failed {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  
+  .payment-status.refunded {
+    background: #e2e3e5;
+    color: #383d41;
+  }
+  
+  /* Status Buttons */
+  .status-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .status-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
+    transition: opacity 0.3s;
+  }
+  
+  .status-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .status-btn.processing {
+    background: #17a2b8;
+  }
+  
+  .status-btn.shipped {
+    background: #007bff;
+  }
+  
+  .status-btn.delivered {
+    background: #28a745;
+  }
+  
+  .status-btn.cancelled {
+    background: #dc3545;
+  }
+  
+  .status-btn:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .filter-bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .filter-select {
+      width: 100%;
+    }
+  
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .status-buttons {
+      flex-direction: column;
+    }
+  
+    .status-btn {
+      width: 100%;
+    }
+  
+    .items-table {
+      font-size: 13px;
+    }
+  
+    .items-table th,
+    .items-table td {
+      padding: 8px;
+    }
+  }
