@@ -34,8 +34,9 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:3001', 
   'http://localhost:3002',
-  'https://your-frontend.vercel.app', // Replace with your actual Vercel URL after deployment
-  'https://e-commerce-backend-3i6r.onrender.com' // Backend itself
+  'https://e-commerce-marketing.vercel.app', // ✅ Admin Frontend (LIVE)
+  'https://e-commerce-marketing-tu4h.vercel.app', // ✅ Customer Frontend (LIVE)
+  'https://e-commerce-backend-3i6r.onrender.com' // ✅ Backend itself (LIVE)
 ];
 
 app.use(cors({ 
