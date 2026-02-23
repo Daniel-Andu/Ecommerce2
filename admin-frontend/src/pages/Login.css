@@ -1,4 +1,4 @@
-.login-container {
+/* .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -118,4 +118,264 @@
 .login-footer .note {
   color: #999;
   font-style: italic;
+} */
+
+
+
+
+
+
+
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.login-box {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.login-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Enhanced Error Message */
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.error-icon {
+  font-size: 20px;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-content strong {
+  display: block;
+  color: #c00;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.error-content p {
+  color: #666;
+  font-size: 13px;
+  margin: 0 0 8px 0;
+}
+
+.error-help {
+  background: #fff;
+  border-radius: 5px;
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 12px;
+  border: 1px solid #fdd;
+}
+
+.error-help p {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.error-help ul {
+  margin: 4px 0 8px 0;
+  padding-left: 20px;
+}
+
+.error-help li {
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.test-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.3s;
+  font-weight: 500;
+}
+
+.test-btn:hover {
+  opacity: 0.9;
+}
+
+/* Login Form */
+.login-form .form-group {
+  margin-bottom: 20px;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.login-form input.error {
+  border-color: #c00;
+}
+
+.login-form input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.login-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Login Footer */
+.login-footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 20px;
+}
+
+.demo-credentials {
+  background: #f8f9fa;
+  border-radius: 5px;
+  padding: 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #666;
+}
+
+.demo-credentials p {
+  margin: 4px 0;
+}
+
+.demo-credentials strong {
+  color: #333;
+}
+
+.login-footer p {
+  margin: 5px 0;
+}
+
+.login-footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.login-footer .note {
+  color: #999;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 30px 20px;
+  }
+
+  .login-header h1 {
+    font-size: 24px;
+  }
+
+  .demo-credentials {
+    padding: 12px;
+  }
+
+  .error-message {
+    padding: 12px;
+  }
 }
