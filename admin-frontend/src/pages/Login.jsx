@@ -27,7 +27,6 @@ export default function Login() {
 
     try {
       console.log(' Attempting login with email:', formData.email);
-      // console.log('🌐 API URL:', api.defaults.baseURL);
       
       const response = await api.post('/auth/login', formData);
       
@@ -37,28 +36,31 @@ export default function Login() {
         throw new Error('Invalid response from server');
       }
 
+      // Check if user is admin
       if (response.data.user.role !== 'admin') {
         setError('Access denied. Admin privileges required.');
         setLoading(false);
         return;
       }
 
+      // Store token and user data
       localStorage.setItem('adminToken', response.data.token);
       localStorage.setItem('adminUser', JSON.stringify(response.data.user));
       
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       
+      // Redirect to dashboard
       navigate('/admin/dashboard');
 
     } catch (err) {
       console.error('❌ Login error:', err);
       
+      // Handle specific error cases
       if (err.response?.status === 401) {
-        setError('Invalid email or password. Please try again.');
+        setError('Invalid email or password. Please check your credentials and try again.');
       } 
       else if (err.response?.status === 404) {
         setError('Login service unavailable. Please try again later.');
-        // console.error('API endpoint not found. URL:', `${api.defaults.baseURL}/auth/login`);
       }
       else if (err.code === 'ERR_NETWORK') {
         setError('Cannot connect to server. Please check your internet connection.');
@@ -77,17 +79,6 @@ export default function Login() {
     }
   };
 
-  const testApiConnection = async () => {
-    try {
-      const testResponse = await api.get('/test');
-      console.log('✅ API test response:', testResponse.data);
-      alert(`API connection successful! Server: ${api.defaults.baseURL}`);
-    } catch (error) {
-      console.error('❌ API test failed:', error);
-      alert(`API connection failed. URL: ${api.defaults.baseURL}`);
-    }
-  };
-
   return (
     <div className="login-container">
       <div className="login-box">
@@ -102,12 +93,6 @@ export default function Login() {
             <div className="error-content">
               <strong>Login Failed</strong>
               <p>{error}</p>
-              <div className="error-help">
-                <p>API URL: <strong>{api.defaults.baseURL}</strong></p>
-                <button onClick={testApiConnection} className="test-btn">
-                  Test API Connection
-                </button>
-              </div>
             </div>
           </div>
         )}
@@ -162,8 +147,7 @@ export default function Login() {
         <div className="login-footer">
           <div className="demo-credentials">
             <p><strong>Demo Credentials:</strong></p>
-            {/* <p>Email: admin@example.com</p>
-            <p>Password: admin123</p> */}
+            
           </div>
         </div>
       </div>
