@@ -26,8 +26,8 @@ export default function Login() {
     setError('');
 
     try {
-      console.log('🔐 Attempting login with email:', formData.email);
-      console.log('🌐 API URL:', api.defaults.baseURL);
+      console.log(' Attempting login with email:', formData.email);
+      // console.log('🌐 API URL:', api.defaults.baseURL);
       
       const response = await api.post('/auth/login', formData);
       
@@ -58,7 +58,7 @@ export default function Login() {
       } 
       else if (err.response?.status === 404) {
         setError('Login service unavailable. Please try again later.');
-        console.error('API endpoint not found. URL:', `${api.defaults.baseURL}/auth/login`);
+        // console.error('API endpoint not found. URL:', `${api.defaults.baseURL}/auth/login`);
       }
       else if (err.code === 'ERR_NETWORK') {
         setError('Cannot connect to server. Please check your internet connection.');
