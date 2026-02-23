@@ -98,7 +98,7 @@ export default function Login() {
 
         {error && (
           <div className="error-message">
-            <span className="error-icon">⚠️</span>
+            <span className="error-icon"></span>
             <div className="error-content">
               <strong>Login Failed</strong>
               <p>{error}</p>
@@ -162,8 +162,8 @@ export default function Login() {
         <div className="login-footer">
           <div className="demo-credentials">
             <p><strong>Demo Credentials:</strong></p>
-            <p>Email: admin@example.com</p>
-            <p>Password: admin123</p>
+            {/* <p>Email: admin@example.com</p>
+            <p>Password: admin123</p> */}
           </div>
         </div>
       </div>
