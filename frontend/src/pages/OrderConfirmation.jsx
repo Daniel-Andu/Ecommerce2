@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import * as api from '../api';
 import toast from 'react-hot-toast';
@@ -9,7 +9,7 @@ const OrderConfirmation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -25,10 +25,16 @@ const OrderConfirmation = () => {
     return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2);
   };
 
+  // Redirect to login if not authenticated
+  if (!authLoading && !user) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
   useEffect(() => {
-    console.log('OrderConfirmation mounted with ID:', id);
-    console.log('Location search:', location.search);
-    console.log('API URL:', API_BASE_URL);
+    console.log('📦 OrderConfirmation mounted with ID:', id);
+    console.log('📍 Location search:', location.search);
+    console.log('🔗 API URL:', API_BASE_URL);
+    console.log('👤 User:', user?.email);
     
     if (!id) {
       const params = new URLSearchParams(location.search);
@@ -53,7 +59,7 @@ const OrderConfirmation = () => {
     } else {
       fetchOrderDetails();
     }
-  }, [id, location]);
+  }, [id, location, user]);
 
   const loadDemoOrder = () => {
     const demoOrder = {
@@ -110,7 +116,7 @@ const OrderConfirmation = () => {
             return;
           }
         } catch (e) {
-          console.error('Error parsing session order:', e);
+          console.error('❌ Error parsing session order:', e);
         }
       }
 
@@ -126,13 +132,13 @@ const OrderConfirmation = () => {
       
       if (status === 'success') {
         setPaymentStatus('success');
-        toast.success('Payment successful!');
+        toast.success('✅ Payment successful!');
       } else if (status === 'failed') {
         setPaymentStatus('failed');
-        toast.error('Payment failed. Please try again.');
+        toast.error('❌ Payment failed. Please try again.');
       }
 
-      // 🔥 FIX: Use environment variable instead of hardcoded localhost
+      // Fetch order from API
       const response = await fetch(`${API_BASE_URL}/orders/${id}`, {
         method: 'GET',
         headers: {
@@ -151,7 +157,7 @@ const OrderConfirmation = () => {
           errorData = { message: 'Unknown error' };
         }
         
-        console.error('API Error Details:', errorData);
+        console.error('❌ API Error Details:', errorData);
         
         if (response.status === 500) {
           throw new Error(`Server error: ${errorData.message || 'Internal server error'}`);
@@ -202,7 +208,7 @@ const OrderConfirmation = () => {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
