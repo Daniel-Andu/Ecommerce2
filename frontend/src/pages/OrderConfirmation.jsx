@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -13,8 +15,16 @@ const OrderConfirmation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ FIX: Use environment variable
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  // ✅ PRODUCTION FIX: Use environment variable with fallback
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://e-commerce-backend-3i6r.onrender.com/api';
+
+  // Debug logging to verify environment
+  console.log('🔧 Environment Info:');
+  console.log('  - Mode:', import.meta.env.MODE);
+  console.log('  - API URL:', API_BASE_URL);
+  console.log('  - VITE_API_URL:', import.meta.env.VITE_API_URL);
+  console.log('  - Order ID:', id);
+  console.log('  - User:', user?.email);
 
   const formatPrice = (price) => {
     if (price === null || price === undefined) return '0.00';
@@ -98,10 +108,11 @@ const OrderConfirmation = () => {
         toast.error('❌ Payment failed');
       }
 
-      // ✅ FIX: Use API_BASE_URL instead of hardcoded localhost
-      console.log('🔍 Fetching from API:', `${API_BASE_URL}/orders/${id}`);
+      // ✅ FIXED: Use production API URL
+      const apiUrl = `${API_BASE_URL}/orders/${id}`;
+      console.log('🔍 Fetching from API:', apiUrl);
       
-      const response = await fetch(`${API_BASE_URL}/orders/${id}`, {
+      const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -271,7 +282,6 @@ const OrderConfirmation = () => {
 };
 
 export default OrderConfirmation;
-
 
 
 
