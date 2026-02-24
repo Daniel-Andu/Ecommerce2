@@ -334,6 +334,7 @@
 
 
 
+// App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
@@ -381,7 +382,7 @@ import AdminOrders from './pages/admin/AdminOrders';
 // Payment Pages
 import PaymentResult from './pages/PaymentResult';
 
-// Protected Route Component - IMPROVED VERSION
+// Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
@@ -396,13 +397,10 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   }
   
   if (!user) {
-    console.log('🔒 Not authenticated - redirecting to login from:', location.pathname);
-    // Save the location they tried to go to
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
   
   if (requiredRole && !requiredRole.includes(user.role)) {
-    console.log('🔒 Insufficient permissions - user role:', user.role, 'required:', requiredRole);
     return <Navigate to="/" replace />;
   }
   
@@ -424,23 +422,17 @@ const SellerRoute = ({ children }) => {
   }
 
   if (!user) {
-    console.log('🔒 Not authenticated - redirecting to login from seller route:', location.pathname);
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Check if user has seller role or is admin
   if (user.role !== 'seller' && user.role !== 'admin') {
-    console.log('🔒 Not a seller - user role:', user.role);
     return <Navigate to="/" replace />;
   }
 
-  // If user is seller and status is pending, show pending page
   if (user.role === 'seller' && user.seller_status === 'pending') {
-    console.log('⏳ Seller pending approval');
     return <SellerPending />;
   }
 
-  // If user is admin or approved seller, show the requested page
   return children;
 };
 
@@ -458,8 +450,8 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/register/seller" element={<RegisterSeller />} />
           <Route path="/cart" element={<Cart />} />
-          
-          {/* Protected Routes - Customer */}
+
+          {/* Protected Customer Routes */}
           <Route path="/checkout" element={
             <ProtectedRoute>
               <ErrorBoundary fallbackType="network">
@@ -495,8 +487,8 @@ function AppContent() {
               </ErrorBoundary>
             </ProtectedRoute>
           } />
-          
-          {/* Order Confirmation Route - FIXED */}
+
+          {/* Order Confirmation */}
           <Route path="/order-confirmation/:id" element={
             <ProtectedRoute>
               <ErrorBoundary>
@@ -504,10 +496,10 @@ function AppContent() {
               </ErrorBoundary>
             </ProtectedRoute>
           } />
-          
-          {/* Payment Result Route - Make this public for payment redirects */}
+
+          {/* Payment Result */}
           <Route path="/payment-result" element={<PaymentResult />} />
-          
+
           {/* Seller Routes */}
           <Route path="/seller" element={
             <SellerRoute>
@@ -523,8 +515,6 @@ function AppContent() {
               </ErrorBoundary>
             </SellerRoute>
           } />
-          
-          {/* Seller Products Routes */}
           <Route path="/seller/products" element={
             <SellerRoute>
               <ErrorBoundary>
@@ -546,8 +536,6 @@ function AppContent() {
               </ErrorBoundary>
             </SellerRoute>
           } />
-          
-          {/* Seller Orders Routes */}
           <Route path="/seller/orders" element={
             <SellerRoute>
               <ErrorBoundary>
@@ -562,8 +550,6 @@ function AppContent() {
               </ErrorBoundary>
             </SellerRoute>
           } />
-          
-          {/* Seller Earnings Routes */}
           <Route path="/seller/earnings" element={
             <SellerRoute>
               <ErrorBoundary>
@@ -578,8 +564,6 @@ function AppContent() {
               </ErrorBoundary>
             </SellerRoute>
           } />
-          
-          {/* Seller Profile Route */}
           <Route path="/seller/profile" element={
             <SellerRoute>
               <ErrorBoundary>
@@ -594,7 +578,7 @@ function AppContent() {
               </ErrorBoundary>
             </SellerRoute>
           } />
-          
+
           {/* Admin Routes */}
           <Route path="/admin" element={
             <ProtectedRoute requiredRole={['admin']}>
@@ -645,8 +629,8 @@ function AppContent() {
               </ErrorBoundary>
             </ProtectedRoute>
           } />
-          
-          {/* 404 - Page Not Found - Make sure this is LAST */}
+
+          {/* 404 */}
           <Route path="*" element={
             <ErrorBoundary fallbackType="notFound">
               <div className="container not-found">
@@ -666,11 +650,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <ErrorBoundary fallbackType="default">
-        <AppContent />
-      </ErrorBoundary>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <ErrorBoundary fallbackType="default">
+          <AppContent />
+        </ErrorBoundary>
+      </AuthProvider>
+    </Router>
   );
 }
 
