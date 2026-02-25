@@ -7,6 +7,9 @@ export default function BannerManagement() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingBanner, setEditingBanner] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     image_url: '',
@@ -39,18 +42,72 @@ export default function BannerManagement() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        return;
+      }
+
+      setImageFile(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      if (editingBanner) {
-        await api.patch(`/admin/banners/${editingBanner.id}`, formData);
-      } else {
-        await api.post('/admin/banners', formData);
+      setUploading(true);
+
+      // If there's a new image file, upload it first
+      let imageUrl = formData.image_url;
+
+      if (imageFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', imageFile);
+
+        const uploadResponse = await api.post('/admin/banners/upload', uploadFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        imageUrl = uploadResponse.data.url;
       }
+
+      const bannerData = {
+        ...formData,
+        image_url: imageUrl
+      };
+
+      if (editingBanner) {
+        await api.patch(`/admin/banners/${editingBanner.id}`, bannerData);
+      } else {
+        await api.post('/admin/banners', bannerData);
+      }
+
       loadBanners();
       resetForm();
     } catch (error) {
       console.error('Error saving banner:', error);
+      alert('Failed to save banner. Please try again.');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -63,6 +120,7 @@ export default function BannerManagement() {
       sort_order: banner.sort_order || 0,
       is_active: banner.is_active === 1
     });
+    setImagePreview(banner.image_url);
     setShowForm(true);
   };
 
@@ -89,6 +147,8 @@ export default function BannerManagement() {
   const resetForm = () => {
     setShowForm(false);
     setEditingBanner(null);
+    setImageFile(null);
+    setImagePreview('');
     setFormData({
       title: '',
       image_url: '',
@@ -106,7 +166,7 @@ export default function BannerManagement() {
     <div className="banner-management">
       <div className="page-header">
         <h1>Banner Management</h1>
-        <button 
+        <button
           className="btn-add"
           onClick={() => setShowForm(true)}
         >
@@ -135,22 +195,40 @@ export default function BannerManagement() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="image_url">Image URL *</label>
-                <input
-                  type="url"
-                  id="image_url"
-                  name="image_url"
-                  value={formData.image_url}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="https://example.com/banner.jpg"
-                />
-                <small>Recommended size: 1920x600 pixels</small>
+                <label htmlFor="banner_image">Banner Image *</label>
+                <div className="image-upload-area">
+                  <input
+                    type="file"
+                    id="banner_image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="file-input"
+                    required={!editingBanner && !imagePreview}
+                  />
+                  <label htmlFor="banner_image" className="file-label">
+                    <div className="upload-icon">📁</div>
+                    <div className="upload-text">
+                      <span className="upload-title">Click to upload banner image</span>
+                      <span className="upload-subtitle">or drag and drop</span>
+                    </div>
+                    <span className="upload-hint">PNG, JPG up to 5MB (Recommended: 1920x600px)</span>
+                  </label>
+                </div>
               </div>
 
-              {formData.image_url && (
+              {imagePreview && (
                 <div className="image-preview">
-                  <img src={formData.image_url} alt="Preview" />
+                  <img src={imagePreview} alt="Preview" />
+                  <button
+                    type="button"
+                    className="btn-remove-image"
+                    onClick={() => {
+                      setImageFile(null);
+                      setImagePreview('');
+                    }}
+                  >
+                    ✕ Remove Image
+                  </button>
                 </div>
               )}
 
@@ -194,10 +272,10 @@ export default function BannerManagement() {
               </div>
 
               <div className="form-actions">
-                <button type="submit" className="btn-save">
-                  {editingBanner ? 'Update Banner' : 'Create Banner'}
+                <button type="submit" className="btn-save" disabled={uploading}>
+                  {uploading ? 'Uploading...' : (editingBanner ? 'Update Banner' : 'Create Banner')}
                 </button>
-                <button type="button" onClick={resetForm} className="btn-cancel">
+                <button type="button" onClick={resetForm} className="btn-cancel" disabled={uploading}>
                   Cancel
                 </button>
               </div>
@@ -222,7 +300,7 @@ export default function BannerManagement() {
                   </span>
                 </div>
               </div>
-              
+
               <div className="banner-info">
                 <h3>{banner.title || 'Untitled Banner'}</h3>
                 {banner.link_url && (
@@ -237,19 +315,19 @@ export default function BannerManagement() {
               </div>
 
               <div className="banner-actions">
-                <button 
+                <button
                   onClick={() => toggleActive(banner.id, banner.is_active)}
                   className={`btn-toggle ${banner.is_active ? 'active' : 'inactive'}`}
                 >
                   {banner.is_active ? 'Deactivate' : 'Activate'}
                 </button>
-                <button 
+                <button
                   onClick={() => handleEdit(banner)}
                   className="btn-edit"
                 >
                   Edit
                 </button>
-                <button 
+                <button
                   onClick={() => handleDelete(banner.id)}
                   className="btn-delete"
                 >

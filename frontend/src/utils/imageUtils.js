@@ -3,22 +3,22 @@
 
 // // export const getImageUrl = (url, fallback = 'https://placehold.co/600x400/6366F1/white?text=Marketplace') => {
 // //   if (!url) return fallback;
-  
+
 // //   // Handle backend uploaded images
 // //   if (url.startsWith('/uploads')) {
 // //     return `${API_URL}${url}`;
 // //   }
-  
+
 // //   // Handle local public images
 // //   if (url.startsWith('/images')) {
 // //     return url;
 // //   }
-  
+
 // //   // Handle full URLs
 // //   if (url.startsWith('http')) {
 // //     return url;
 // //   }
-  
+
 // //   return fallback;
 // // };
 
@@ -50,22 +50,22 @@
 
 // export const getImageUrl = (url, fallback = 'https://placehold.co/600x400/6366F1/white?text=Marketplace') => {
 //   if (!url) return fallback;
-  
+
 //   // Handle backend uploaded images
 //   if (url.startsWith('/uploads')) {
 //     return `${API_URL}${url}`;
 //   }
-  
+
 //   // Handle local public images
 //   if (url.startsWith('/images')) {
 //     return url;
 //   }
-  
+
 //   // Handle full URLs
 //   if (url.startsWith('http')) {
 //     return url;
 //   }
-  
+
 //   return fallback;
 // };
 
@@ -92,30 +92,31 @@
 
 
 // frontend/src/utils/imageUtils.js
-export const API_URL = 'http://localhost:5000';
+// Use environment variable or fallback to localhost
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const getImageUrl = (url, fallback = 'https://placehold.co/600x400/6366F1/white?text=Marketplace') => {
   // Handle undefined or null
   if (!url) return fallback;
-  
+
   // Ensure url is a string
   const urlString = String(url);
-  
+
   // Handle backend uploaded images
   if (urlString.startsWith('/uploads')) {
     return `${API_URL}${urlString}`;
   }
-  
+
   // Handle local public images
   if (urlString.startsWith('/images')) {
     return urlString;
   }
-  
+
   // Handle full URLs
   if (urlString.startsWith('http')) {
     return urlString;
   }
-  
+
   return fallback;
 };
 
