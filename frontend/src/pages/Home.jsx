@@ -59,6 +59,14 @@ export default function Home() {
 
   return (
     <div className="home">
+      {/* Animated Welcome Message */}
+      <div className="welcome-banner">
+        <div className="welcome-content">
+          <h1 className="welcome-text">Welcome to Our Marketplace</h1>
+          <p className="welcome-subtitle">Discover Amazing Products at Great Prices</p>
+        </div>
+      </div>
+
       {/* Hero Banner - Full width below navbar */}
       <section className="hero">
         {bannersList.length > 0 ? (

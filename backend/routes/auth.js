@@ -161,9 +161,9 @@
 
 // //     // Check if sellers table exists
 // //     const [tables] = await connection.query("SHOW TABLES LIKE 'sellers'");
-    
+
 // //     let sellerId = null;
-    
+
 // //     if (tables.length > 0) {
 // //       // Insert into sellers table
 // //       const [sellerResult] = await connection.query(
@@ -189,7 +189,7 @@
 // //         ]
 // //       );
 // //       sellerId = sellerResult.insertId;
-      
+
 // //       console.log('Seller record created with ID:', sellerId);
 // //     } else {
 // //       console.log('Sellers table does not exist, skipping seller record');
@@ -299,7 +299,7 @@
 // //           'SELECT status, business_name FROM sellers WHERE user_id = ?',
 // //           [user.id]
 // //         );
-        
+
 // //         if (sellers.length > 0) {
 // //           user.seller_status = sellers[0].status;
 // //           user.business_name = sellers[0].business_name;
@@ -338,7 +338,7 @@
 // // router.get('/me', auth, async (req, res) => {
 // //   try {
 // //     console.log('Getting user data for ID:', req.user.id);
-    
+
 // //     // Get fresh user data
 // //     const [users] = await pool.query(
 // //       `SELECT 
@@ -356,14 +356,14 @@
 // //       WHERE id = ?`,
 // //       [req.user.id]
 // //     );
-    
+
 // //     if (!users.length) {
 // //       console.log('User not found with ID:', req.user.id);
 // //       return res.status(404).json({ message: 'User not found' });
 // //     }
 
 // //     const userData = users[0];
-    
+
 // //     // If user is a seller, get seller info
 // //     if (userData.role === 'seller') {
 // //       try {
@@ -380,7 +380,7 @@
 // //           WHERE user_id = ?`,
 // //           [req.user.id]
 // //         );
-        
+
 // //         if (sellers.length > 0) {
 // //           userData.seller_id = sellers[0].seller_id;
 // //           userData.business_name = sellers[0].business_name;
@@ -394,10 +394,10 @@
 // //         userData.seller_status = 'pending';
 // //       }
 // //     }
-    
+
 // //     console.log('User data retrieved successfully:', userData.email);
 // //     res.json(userData);
-    
+
 // //   } catch (err) {
 // //     console.error('Get me error:', err);
 // //     res.status(500).json({ 
@@ -521,14 +521,14 @@
 // // router.post('/setup-admin', async (req, res) => {
 // //   try {
 // //     const adminEmail = 'admin@example.com';
-    
+
 // //     // Check if admin exists
 // //     const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [adminEmail]);
-    
+
 // //     if (existing.length === 0) {
 // //       // Create admin user
 // //       const hashedPassword = await bcrypt.hash('admin123', 10);
-      
+
 // //       await pool.query(
 // //         `INSERT INTO users (
 // //           email, 
@@ -543,7 +543,7 @@
 // //         ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
 // //         [adminEmail, hashedPassword, 'Admin', 'User', 'admin', 1, 1]
 // //       );
-      
+
 // //       console.log('Admin user created successfully');
 // //       res.json({ message: 'Admin user created successfully' });
 // //     } else {
@@ -758,7 +758,7 @@
 //         0.00
 //       ]
 //     );
-    
+
 //     const sellerId = sellerResult.insertId;
 //     console.log('Seller record created with ID:', sellerId);
 
@@ -862,7 +862,7 @@
 //           'SELECT status, business_name FROM sellers WHERE user_id = ?',
 //           [user.id]
 //         );
-        
+
 //         if (sellers.length > 0) {
 //           user.seller_status = sellers[0].status;
 //           user.business_name = sellers[0].business_name;
@@ -900,7 +900,7 @@
 // router.get('/me', auth, async (req, res) => {
 //   try {
 //     console.log('Getting user data for ID:', req.user.id);
-    
+
 //     const [users] = await pool.query(
 //       `SELECT 
 //         id, 
@@ -917,14 +917,14 @@
 //       WHERE id = ?`,
 //       [req.user.id]
 //     );
-    
+
 //     if (!users.length) {
 //       console.log('User not found with ID:', req.user.id);
 //       return res.status(404).json({ message: 'User not found' });
 //     }
 
 //     const userData = users[0];
-    
+
 //     if (userData.role === 'seller') {
 //       try {
 //         const [sellers] = await pool.query(
@@ -939,7 +939,7 @@
 //           WHERE user_id = ?`,
 //           [req.user.id]
 //         );
-        
+
 //         if (sellers.length > 0) {
 //           userData.seller_id = sellers[0].seller_id;
 //           userData.business_name = sellers[0].business_name;
@@ -952,10 +952,10 @@
 //         userData.seller_status = 'pending';
 //       }
 //     }
-    
+
 //     console.log('User data retrieved successfully:', userData.email);
 //     res.json(userData);
-    
+
 //   } catch (err) {
 //     console.error('Get me error:', err);
 //     res.status(500).json({ 
@@ -1072,12 +1072,12 @@
 // router.post('/setup-admin', async (req, res) => {
 //   try {
 //     const adminEmail = 'admin@example.com';
-    
+
 //     const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [adminEmail]);
-    
+
 //     if (existing.length === 0) {
 //       const hashedPassword = await bcrypt.hash('admin123', 10);
-      
+
 //       await pool.query(
 //         `INSERT INTO users (
 //           email, 
@@ -1092,7 +1092,7 @@
 //         ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
 //         [adminEmail, hashedPassword, 'Admin', 'User', 'admin', 1, 1]
 //       );
-      
+
 //       console.log('Admin user created successfully');
 //       res.json({ message: 'Admin user created successfully' });
 //     } else {
@@ -1120,6 +1120,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const pool = require('../config/db');
 const { auth } = require('../middleware/auth');
 
@@ -1158,14 +1161,14 @@ router.post('/register', async (req, res) => {
         updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
       [
-        email, 
-        hashedPassword, 
-        first_name || null, 
-        last_name || null, 
-        phone || null, 
-        role, 
-        1, 
-        0, 
+        email,
+        hashedPassword,
+        first_name || null,
+        last_name || null,
+        phone || null,
+        role,
+        1,
+        0,
         0
       ]
     );
@@ -1191,9 +1194,9 @@ router.post('/register', async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Register error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Registration failed',
-      error: err.sqlMessage || err.message 
+      error: err.sqlMessage || err.message
     });
   }
 });
@@ -1202,11 +1205,11 @@ router.post('/register', async (req, res) => {
 router.post('/register/seller', async (req, res) => {
   let connection;
   try {
-    const { 
-      email, 
-      password, 
-      first_name, 
-      last_name, 
+    const {
+      email,
+      password,
+      first_name,
+      last_name,
       phone,
       business_name,
       business_address,
@@ -1249,14 +1252,14 @@ router.post('/register/seller', async (req, res) => {
         updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
       [
-        email, 
-        hashedPassword, 
-        first_name || null, 
-        last_name || null, 
-        phone || null, 
-        'seller', 
-        1, 
-        0, 
+        email,
+        hashedPassword,
+        first_name || null,
+        last_name || null,
+        phone || null,
+        'seller',
+        1,
+        0,
         0
       ]
     );
@@ -1289,7 +1292,7 @@ router.post('/register/seller', async (req, res) => {
         0.00
       ]
     );
-    
+
     const sellerId = sellerResult.insertId;
     console.log('✅ Seller record created with ID:', sellerId);
 
@@ -1323,7 +1326,7 @@ router.post('/register/seller', async (req, res) => {
       await connection.rollback();
     }
     console.error('❌ Seller registration error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Seller registration failed',
       error: err.sqlMessage || err.message
     });
@@ -1374,8 +1377,8 @@ router.post('/login', async (req, res) => {
 
     if (!user.is_active) {
       console.log('❌ Inactive account:', email);
-      return res.status(401).json({ 
-        message: 'Account is inactive. Please contact admin.' 
+      return res.status(401).json({
+        message: 'Account is inactive. Please contact admin.'
       });
     }
 
@@ -1393,7 +1396,7 @@ router.post('/login', async (req, res) => {
           'SELECT status, business_name FROM sellers WHERE user_id = ?',
           [user.id]
         );
-        
+
         if (sellers.length > 0) {
           user.seller_status = sellers[0].status;
           user.business_name = sellers[0].business_name;
@@ -1420,9 +1423,9 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Login error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Login failed',
-      error: err.message 
+      error: err.message
     });
   }
 });
@@ -1431,7 +1434,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', auth, async (req, res) => {
   try {
     console.log('👤 Getting user data for ID:', req.user.id);
-    
+
     const [users] = await pool.query(
       `SELECT 
         id, 
@@ -1448,14 +1451,14 @@ router.get('/me', auth, async (req, res) => {
       WHERE id = ?`,
       [req.user.id]
     );
-    
+
     if (!users.length) {
       console.log('❌ User not found with ID:', req.user.id);
       return res.status(404).json({ message: 'User not found' });
     }
 
     const userData = users[0];
-    
+
     if (userData.role === 'seller') {
       try {
         const [sellers] = await pool.query(
@@ -1470,7 +1473,7 @@ router.get('/me', auth, async (req, res) => {
           WHERE user_id = ?`,
           [req.user.id]
         );
-        
+
         if (sellers.length > 0) {
           userData.seller_id = sellers[0].seller_id;
           userData.business_name = sellers[0].business_name;
@@ -1483,15 +1486,15 @@ router.get('/me', auth, async (req, res) => {
         userData.seller_status = 'pending';
       }
     }
-    
+
     console.log('✅ User data retrieved successfully:', userData.email);
     res.json(userData);
-    
+
   } catch (err) {
     console.error('❌ Get me error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Failed to get user data',
-      error: err.message 
+      error: err.message
     });
   }
 });
@@ -1502,14 +1505,14 @@ router.post('/change-password', auth, async (req, res) => {
     const { current_password, new_password } = req.body;
 
     if (!current_password || !new_password) {
-      return res.status(400).json({ 
-        message: 'Current password and new password are required' 
+      return res.status(400).json({
+        message: 'Current password and new password are required'
       });
     }
 
     if (new_password.length < 6) {
-      return res.status(400).json({ 
-        message: 'New password must be at least 6 characters' 
+      return res.status(400).json({
+        message: 'New password must be at least 6 characters'
       });
     }
 
@@ -1537,9 +1540,9 @@ router.post('/change-password', auth, async (req, res) => {
     res.json({ message: 'Password changed successfully' });
   } catch (err) {
     console.error('❌ Change password error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Failed to change password',
-      error: err.message 
+      error: err.message
     });
   }
 });
@@ -1568,33 +1571,78 @@ router.patch('/profile', auth, async (req, res) => {
     res.json(users[0]);
   } catch (err) {
     console.error('❌ Update profile error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Failed to update profile',
-      error: err.message 
+      error: err.message
     });
   }
 });
 
 // ==================== UPLOAD PROFILE IMAGE ====================
-router.post('/profile/image', auth, async (req, res) => {
-  try {
-    const { image_url } = req.body;
+// Configure multer for profile image uploads
+const profileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../uploads/profile-images');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
 
-    if (!image_url) {
-      return res.status(400).json({ message: 'Image URL is required' });
+const profileUpload = multer({
+  storage: profileStorage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp)'));
+    }
+  }
+});
+
+router.post('/profile/image', auth, profileUpload.single('profile_image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file uploaded' });
     }
 
+    // Create the image URL path
+    const image_url = `/uploads/profile-images/${req.file.filename}`;
+
+    // Update user's profile image in database
     await pool.query(
       'UPDATE users SET profile_image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
       [image_url, req.user.id]
     );
 
-    res.json({ message: 'Profile image updated successfully', image_url });
+    // Get updated user data
+    const [users] = await pool.query(
+      `SELECT id, email, first_name, last_name, phone, role, profile_image, 
+              email_verified, phone_verified, is_active, created_at
+       FROM users WHERE id = ?`,
+      [req.user.id]
+    );
+
+    res.json({
+      message: 'Profile image updated successfully',
+      profile_image: image_url,
+      user: users[0]
+    });
   } catch (err) {
     console.error('❌ Upload profile image error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Failed to upload profile image',
-      error: err.message 
+      error: err.message
     });
   }
 });
@@ -1603,12 +1651,12 @@ router.post('/profile/image', auth, async (req, res) => {
 router.post('/setup-admin', async (req, res) => {
   try {
     const adminEmail = 'admin@example.com';
-    
+
     const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [adminEmail]);
-    
+
     if (existing.length === 0) {
       const hashedPassword = await bcrypt.hash('admin123', 10);
-      
+
       await pool.query(
         `INSERT INTO users (
           email, 
@@ -1623,7 +1671,7 @@ router.post('/setup-admin', async (req, res) => {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
         [adminEmail, hashedPassword, 'Admin', 'User', 'admin', 1, 1]
       );
-      
+
       console.log('✅ Admin user created successfully');
       res.json({ message: 'Admin user created successfully' });
     } else {
@@ -1636,16 +1684,16 @@ router.post('/setup-admin', async (req, res) => {
     }
   } catch (err) {
     console.error('❌ Setup admin error:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Failed to setup admin',
-      error: err.message 
+      error: err.message
     });
   }
 });
 
 // ==================== TEST ROUTE ====================
 router.get('/test', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Auth routes are working!',
     routes: ['/login', '/register', '/me', '/change-password']
   });

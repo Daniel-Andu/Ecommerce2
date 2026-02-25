@@ -157,9 +157,12 @@ export default function Login() {
 
         <div className="login-footer">
           <div className="demo-credentials">
-            <p><strong>Demo Credentials:</strong></p>
-            
+            <p><strong>Administrator Access:</strong></p>
+            <p>Use your admin credentials to access the dashboard</p>
           </div>
+          <p className="note">
+            Need help? Contact your system administrator
+          </p>
         </div>
       </div>
     </div>
