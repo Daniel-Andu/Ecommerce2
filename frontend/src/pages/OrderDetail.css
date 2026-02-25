@@ -1,11 +1,72 @@
-.order-detail-page { padding: 2rem 0 3rem; }
-.back-link { display: inline-block; margin-bottom: 1rem; color: var(--primary); font-weight: 600; }
-.order-detail-page h1 { margin-bottom: 1.5rem; font-size: 1.5rem; color: var(--text); }
-.order-detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-.order-info p { margin-bottom: 0.5rem; }
-.shipping-address { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-.order-items h2 { font-size: 1.1rem; margin-bottom: 1rem; }
-.order-item-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
-.order-totals { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-.order-totals p { margin-bottom: 0.25rem; }
-@media (max-width: 768px) { .order-detail-layout { grid-template-columns: 1fr; } }
+.order-detail-page {
+    padding: 2rem 0 3rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.order-detail-page h1 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+.order-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.order-info p {
+    margin-bottom: 0.5rem;
+}
+
+.shipping-address {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.order-items h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.order-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.order-totals {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.order-totals p {
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .order-detail-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.order-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.order-actions .btn {
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+}

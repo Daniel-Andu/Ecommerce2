@@ -172,25 +172,25 @@
 //     console.log('   Database:', process.env.DB_NAME);
 //     console.log('   Environment:', process.env.NODE_ENV || 'development');
 //     console.log('   SSL:', isProduction ? 'Enabled' : 'Disabled');
-    
+
 //     const connection = await pool.getConnection();
-    
+
 //     // Run a simple query to verify connection
 //     const [result] = await connection.query('SELECT 1 + 1 AS solution');
 //     console.log('✅ Database connected successfully!');
 //     console.log('   Test query result:', result[0].solution);
-    
+
 //     // Check if we can access the tables
 //     const [tables] = await connection.query('SHOW TABLES');
 //     console.log('📊 Tables in database:', tables.length);
-    
+
 //     connection.release();
 //     return true;
 //   } catch (err) {
 //     console.error('❌ Database Connection Error:');
 //     console.error('   Code:', err.code);
 //     console.error('   Message:', err.message);
-    
+
 //     if (err.code === 'ENOTFOUND') {
 //       console.error('\n🔧 Troubleshooting Tips:');
 //       console.error('1. Check if the hostname is correct:', process.env.DB_HOST);
@@ -208,7 +208,7 @@
 //       console.error('2. TiDB Cloud might be slow to respond');
 //       console.error('3. Try increasing connectTimeout in pool config');
 //     }
-    
+
 //     // Don't exit in production, let the server try to recover
 //     if (!isProduction) {
 //       process.exit(1);
@@ -239,6 +239,7 @@ require('dotenv').config();
 
 // Determine if we're in production
 const isProduction = process.env.NODE_ENV === 'production';
+const isTiDBCloud = process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud.com');
 
 // TiDB Cloud requires SSL with specific configuration
 const poolConfig = {
@@ -248,15 +249,19 @@ const poolConfig = {
   database: process.env.DB_NAME,
   port: process.env.DB_PORT || 4000,
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 5, // Reduced for TiDB Cloud
   queueLimit: 0,
-  connectTimeout: 60000,
+  connectTimeout: 30000, // 30 seconds
+  acquireTimeout: 30000,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0,
 };
 
-// Add SSL for production (TiDB Cloud requires SSL)
-if (isProduction) {
+// Add SSL for TiDB Cloud (always required for TiDB Cloud)
+if (isTiDBCloud) {
   poolConfig.ssl = {
-    rejectUnauthorized: true,
+    rejectUnauthorized: false, // TiDB Cloud compatibility
+    minVersion: 'TLSv1.2'
   };
   console.log('🔒 SSL enabled for TiDB Cloud connection');
 }
@@ -271,24 +276,24 @@ const testConnection = async () => {
     console.log('   Host:', process.env.DB_HOST);
     console.log('   Database:', process.env.DB_NAME);
     console.log('   Environment:', process.env.NODE_ENV || 'development');
-    console.log('   SSL:', isProduction ? 'Enabled' : 'Disabled');
-    
+    console.log('   SSL:', isTiDBCloud ? 'Enabled' : 'Disabled');
+
     // Get a connection from the pool
     const connection = await pool.getConnection();
-    
+
     // Run a simple query to verify connection
     const [result] = await connection.query('SELECT 1 + 1 AS solution');
     console.log('✅ Database connected successfully!');
     console.log('   Test query result:', result[0].solution);
-    
+
     // Disable strict mode for this connection
     await connection.query("SET SESSION sql_mode = ''");
     console.log('✅ Disabled ONLY_FULL_GROUP_BY mode');
-    
+
     // Check if we can access the tables
     const [tables] = await connection.query('SHOW TABLES');
     console.log('📊 Tables in database:', tables.length);
-    
+
     // Release the connection back to the pool
     connection.release();
     return true;
@@ -296,7 +301,7 @@ const testConnection = async () => {
     console.error('❌ Database Connection Error:');
     console.error('   Code:', err.code);
     console.error('   Message:', err.message);
-    
+
     if (err.code === 'ENOTFOUND') {
       console.error('\n🔧 Troubleshooting Tips:');
       console.error('1. Check if the hostname is correct:', process.env.DB_HOST);
@@ -312,7 +317,7 @@ const testConnection = async () => {
       console.error('1. Connection timeout - check network/firewall');
       console.error('2. TiDB Cloud might be slow to respond');
     }
-    
+
     // Don't exit in production, let the server try to recover
     if (!isProduction) {
       process.exit(1);

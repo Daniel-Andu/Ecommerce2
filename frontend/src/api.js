@@ -161,19 +161,26 @@ export const wishlist = {
   add: (id) => request('/wishlist', { method: 'POST', body: JSON.stringify({ product_id: id }) }), 
   remove: (id) => request('/wishlist/' + id, { method: 'DELETE' }) 
 };
-
-// ========== CHAPA PAYMENT API ==========
+// ========== CHAPA PAYMENT API - FIXED ==========
 export const payment = { 
   // Initialize payment with Chapa
   initialize: async (data) => {
     try {
-      // Only send order_id - backend will fetch other details from database
+      console.log('Initializing payment with data:', data);
+      
+      // Make sure we're sending the correct order_id
+      const requestData = {
+        order_id: data.order_id || data.orderId
+      };
+      
+      console.log('Sending to backend:', requestData);
+      
       const response = await request('/payment/initialize', { 
         method: 'POST', 
-        body: JSON.stringify({
-          order_id: data.order_id || data.orderId
-        }) 
+        body: JSON.stringify(requestData)
       });
+      
+      console.log('Payment initialize response:', response);
       return response;
     } catch (error) {
       console.error('Payment initialize error:', error);
@@ -198,6 +205,8 @@ export const payment = {
     method: 'POST' 
   })
 };
+
+
 
 // Reviews API
 export const reviews = { 

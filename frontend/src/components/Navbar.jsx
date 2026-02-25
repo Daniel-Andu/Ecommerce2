@@ -22,7 +22,7 @@
 // //         console.error('Failed to load cart count:', error);
 // //       }
 // //     };
-    
+
 // //     loadCartCount();
 // //   }, []);
 
@@ -67,11 +67,11 @@
 
 // //         <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
 // //           <Link to="/products" onClick={() => setMobileMenuOpen(false)}>Products</Link>
-          
+
 // //           <Link to="/cart" className="cart-link" onClick={() => setMobileMenuOpen(false)}>
 // //             Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
 // //           </Link>
-          
+
 // //           {user ? (
 // //             <div className="user-menu">
 // //               <button className="user-menu-btn">
@@ -81,7 +81,7 @@
 // //                 <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>Profile</Link>
 // //                 <Link to="/orders" onClick={() => setMobileMenuOpen(false)}>My Orders</Link>
 // //                 <Link to="/wishlist" onClick={() => setMobileMenuOpen(false)}>Wishlist</Link>
-                
+
 // //                 {user.role === 'seller' && (
 // //                   <>
 // //                     <div className="dropdown-divider"></div>
@@ -89,7 +89,7 @@
 // //                     <Link to="/seller/products" onClick={() => setMobileMenuOpen(false)}>My Products</Link>
 // //                   </>
 // //                 )}
-                
+
 // //                 {user.role === 'admin' && (
 // //                   <>
 // //                     <div className="dropdown-divider"></div>
@@ -98,7 +98,7 @@
 // //                     <Link to="/admin/products" onClick={() => setMobileMenuOpen(false)}>Manage Products</Link>
 // //                   </>
 // //                 )}
-                
+
 // //                 <div className="dropdown-divider"></div>
 // //                 <button onClick={handleLogout} className="logout-btn">Logout</button>
 // //               </div>
@@ -144,7 +144,7 @@
 
 //     const handleCartUpdate = () => loadCart();
 //     window.addEventListener('cart-updated', handleCartUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('cart-updated', handleCartUpdate);
 //     };
@@ -216,12 +216,12 @@
 //         {/* Navigation Links */}
 //         <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
 //           <Link to="/products" onClick={() => setMenuOpen(false)}>Products</Link>
-          
+
 //           <Link to="/cart" className="cart-link" onClick={() => setMenuOpen(false)}>
 //             Cart
 //             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
 //           </Link>
-          
+
 //           {/* User Menu - Logged In */}
 //           {user ? (
 //             <div className="user-menu">
@@ -241,7 +241,7 @@
 //                 <span className="user-name">{user.first_name}</span>
 //                 <span className="dropdown-arrow">{userMenuOpen ? '▲' : '▼'}</span>
 //               </div>
-              
+
 //               {/* Dropdown Menu */}
 //               <div className={`dropdown ${userMenuOpen ? 'active' : ''}`}>
 //                 <Link to="/profile" onClick={() => { setUserMenuOpen(false); setMenuOpen(false); }}>
@@ -253,7 +253,7 @@
 //                 <Link to="/wishlist" onClick={() => { setUserMenuOpen(false); setMenuOpen(false); }}>
 //                   <span className="dropdown-icon">❤️</span> Wishlist
 //                 </Link>
-                
+
 //                 {/* Seller Links - Only for sellers */}
 //                 {user.role === 'seller' && (
 //                   <>
@@ -269,7 +269,7 @@
 //                     </Link>
 //                   </>
 //                 )}
-                
+
 //                 {/* Admin Links - Only for admins */}
 //                 {user.role === 'admin' && (
 //                   <>
@@ -294,7 +294,7 @@
 //                     </Link>
 //                   </>
 //                 )}
-                
+
 //                 <div className="dropdown-divider"></div>
 //                 <button onClick={handleLogout} className="logout-btn">
 //                   <span className="dropdown-icon">🚪</span> Logout
@@ -326,10 +326,13 @@ import { cart as cartApi } from '../api';
 import { getImageUrl, handleImageError, avatarPlaceholder } from '../utils/imageUtils';
 import './Navbar.css';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+
 export default function Navbar() {
-  const { user, logout, checkInGroup } = useAuth(); // Added checkInGroup here
+  const { user, logout, checkInGroup } = useAuth();
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
+  const [notificationCount, setNotificationCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -347,11 +350,32 @@ export default function Navbar() {
 
     const handleCartUpdate = () => loadCart();
     window.addEventListener('cart-updated', handleCartUpdate);
-    
+
     return () => {
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
   }, []);
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      if (!user) return;
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/notifications/unread-count`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        setNotificationCount(data.count || 0);
+      } catch (error) {
+        console.error('Notifications error:', error);
+      }
+    };
+
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -390,10 +414,10 @@ export default function Navbar() {
           <div className="brand-logo">
             <div className="logo-icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 7L12 3L20 7L12 11L4 7Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="white" fillOpacity="0.9"/>
-                <path d="M4 12L12 16L20 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M4 17L12 21L20 17" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <circle cx="12" cy="7" r="2" fill="white"/>
+                <path d="M4 7L12 3L20 7L12 11L4 7Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="white" fillOpacity="0.9" />
+                <path d="M4 12L12 16L20 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                <path d="M4 17L12 21L20 17" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                <circle cx="12" cy="7" r="2" fill="white" />
               </svg>
             </div>
             <span className="brand-name">Marketplace</span>
@@ -419,20 +443,27 @@ export default function Navbar() {
         {/* Navigation Links */}
         <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
           <Link to="/products" onClick={() => setMenuOpen(false)}>Products</Link>
-          
+
           <Link to="/cart" className="cart-link" onClick={() => setMenuOpen(false)}>
             Cart
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
-          
+
+          {user && (
+            <Link to="/notifications" className="notifications-link" onClick={() => setMenuOpen(false)}>
+              <span className="bell-icon">🔔</span>
+              {notificationCount > 0 && <span className="notification-badge">{notificationCount}</span>}
+            </Link>
+          )}
+
           {/* User Menu - Logged In */}
           {user ? (
             <div className="user-menu">
               <div className="user-info" onClick={toggleUserMenu}>
                 {user.profile_image ? (
-                  <img 
-                    src={getImageUrl(user.profile_image)} 
-                    alt={user.first_name} 
+                  <img
+                    src={getImageUrl(user.profile_image)}
+                    alt={user.first_name}
                     className="user-avatar"
                     onError={(e) => handleImageError(e, avatarPlaceholder)}
                   />
@@ -444,7 +475,7 @@ export default function Navbar() {
                 <span className="user-name">{user.first_name}</span>
                 <span className="dropdown-arrow">{userMenuOpen ? '▲' : '▼'}</span>
               </div>
-              
+
               {/* Dropdown Menu */}
               <div className={`dropdown ${userMenuOpen ? 'active' : ''}`}>
                 <Link to="/profile" onClick={() => { setUserMenuOpen(false); setMenuOpen(false); }}>
@@ -456,7 +487,7 @@ export default function Navbar() {
                 <Link to="/wishlist" onClick={() => { setUserMenuOpen(false); setMenuOpen(false); }}>
                   <span className="dropdown-icon">❤️</span> Wishlist
                 </Link>
-                
+
                 {/* Seller Links - Using checkInGroup instead of user.role */}
                 {checkInGroup('seller') && (
                   <>
@@ -472,7 +503,7 @@ export default function Navbar() {
                     </Link>
                   </>
                 )}
-                
+
                 {/* Admin Links - Using checkInGroup instead of user.role */}
                 {checkInGroup('admin') && (
                   <>
@@ -497,7 +528,7 @@ export default function Navbar() {
                     </Link>
                   </>
                 )}
-                
+
                 <div className="dropdown-divider"></div>
                 <button onClick={handleLogout} className="logout-btn">
                   <span className="dropdown-icon">🚪</span> Logout

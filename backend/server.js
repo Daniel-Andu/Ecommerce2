@@ -17,6 +17,16 @@ const paymentRoutes = require('./routes/payment');
 const reviewsRoutes = require('./routes/reviews');
 const sellerRoutes = require('./routes/seller');
 const adminRoutes = require('./routes/admin');
+const notificationsRoutes = require('./routes/notifications');
+const returnsRoutes = require('./routes/returns');
+const withdrawalsRoutes = require('./routes/withdrawals');
+const shippingRoutes = require('./routes/shipping');
+const couponsRoutes = require('./routes/coupons');
+const reportsRoutes = require('./routes/reports');
+const pagesRoutes = require('./routes/pages');
+const searchRoutes = require('./routes/search');
+const usersRoutes = require('./routes/users');
+const variantsRoutes = require('./routes/variants');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -83,6 +93,16 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/seller', sellerRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/returns', returnsRoutes);
+app.use('/api/withdrawals', withdrawalsRoutes);
+app.use('/api/shipping', shippingRoutes);
+app.use('/api/coupons', couponsRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/pages', pagesRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/variants', variantsRoutes);
 
 // Test route
 app.get('/api/test', (req, res) => {

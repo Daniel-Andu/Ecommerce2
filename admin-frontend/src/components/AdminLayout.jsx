@@ -18,7 +18,8 @@ export default function AdminLayout() {
     { path: '/admin/sellers', label: 'Sellers', icon: '👥' },
     { path: '/admin/orders', label: 'Orders', icon: '🛍️' },
     { path: '/admin/categories', label: 'Categories', icon: '📁' },
-    { path: '/admin/banners', label: 'Banners', icon: '🖼️' }
+    { path: '/admin/banners', label: 'Banners', icon: '🖼️' },
+    { path: '/admin/reports', label: 'Reports', icon: '📈' }
   ];
 
   return (
@@ -27,7 +28,7 @@ export default function AdminLayout() {
         <div className="sidebar-header">
           <h2>Admin Panel</h2>
         </div>
-        
+
         <nav className="sidebar-nav">
           {menuItems.map(item => (
             <Link key={item.path} to={item.path} className="nav-link">
@@ -36,7 +37,7 @@ export default function AdminLayout() {
             </Link>
           ))}
         </nav>
-        
+
         <div className="sidebar-footer">
           <div className="user-info">
             <div className="user-avatar">
@@ -52,10 +53,10 @@ export default function AdminLayout() {
           </button>
         </div>
       </aside>
-      
+
       <main className="main-content">
         <div className="content-header">
-          <h1>{menuItems.find(item => 
+          <h1>{menuItems.find(item =>
             window.location.pathname.includes(item.path)
           )?.label || 'Dashboard'}</h1>
         </div>

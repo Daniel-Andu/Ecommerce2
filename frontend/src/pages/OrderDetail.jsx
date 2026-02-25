@@ -2,7 +2,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { orders } from '../api';
 import toast from 'react-hot-toast';
 import './OrderDetail.css';
@@ -19,6 +19,7 @@ const STATUS_LABELS = {
 
 export default function OrderDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -59,9 +60,9 @@ export default function OrderDetail() {
     <div className="order-detail-page">
       <div className="container">
         <Link to="/orders" className="back-link">← Back to Orders</Link>
-        
+
         <h1>Order {order.order_number}</h1>
-        
+
         <div className="order-detail-layout">
           <div className="order-info">
             <div className="info-card">
@@ -69,16 +70,28 @@ export default function OrderDetail() {
               <p className={`status-badge ${order.status}`}>
                 {STATUS_LABELS[order.status] || order.status}
               </p>
-              
+
               <h3>Payment Status</h3>
               <p className={`status-badge ${order.payment_status}`}>
                 {order.payment_status}
               </p>
-              
+
               <h3>Order Date</h3>
               <p>{new Date(order.created_at).toLocaleString()}</p>
+
+              {/* Request Return Button - Only show for delivered orders */}
+              {order.status === 'delivered' && (
+                <div className="order-actions">
+                  <button
+                    className="btn btn-outline"
+                    onClick={() => navigate(`/returns?order_id=${order.id}`)}
+                  >
+                    📦 Request Return
+                  </button>
+                </div>
+              )}
             </div>
-            
+
             {order.address && (
               <div className="info-card">
                 <h3>Shipping Address</h3>
@@ -91,10 +104,10 @@ export default function OrderDetail() {
               </div>
             )}
           </div>
-          
+
           <div className="order-items">
             <h2>Order Items</h2>
-            
+
             {(order.items || []).map((item) => (
               <div key={item.id} className="order-item">
                 <div className="item-details">
@@ -111,7 +124,7 @@ export default function OrderDetail() {
                 </div>
               </div>
             ))}
-            
+
             <div className="order-totals">
               <div className="total-row">
                 <span>Subtotal:</span>

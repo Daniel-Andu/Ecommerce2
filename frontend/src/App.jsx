@@ -24,6 +24,9 @@ import MyOrders from './pages/MyOrders';
 import OrderDetail from './pages/OrderDetail';
 import Wishlist from './pages/Wishlist';
 import OrderConfirmation from './pages/OrderConfirmation';
+import NotificationsCenter from './pages/NotificationsCenter';
+import MyReturns from './pages/MyReturns';
+import AdvancedSearch from './pages/AdvancedSearch';
 
 // Seller Pages
 import SellerDashboard from './pages/SellerDashboard';
@@ -33,6 +36,7 @@ import SellerPending from './pages/SellerPending';
 import AddProduct from './pages/seller/AddProduct';
 import EditProduct from './pages/seller/EditProduct';
 import SellerEarnings from './pages/seller/SellerEarnings';
+import SellerWallet from './pages/SellerWallet';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -152,14 +156,34 @@ function AppContent() {
             </ProtectedRoute>
           } />
           
-          {/* Order Confirmation Route */}
-          <Route path="/order-confirmation/:id" element={
+          <Route path="/notifications" element={
             <ProtectedRoute>
               <ErrorBoundary>
-                <OrderConfirmation />
+                <NotificationsCenter />
               </ErrorBoundary>
             </ProtectedRoute>
           } />
+          
+          <Route path="/returns" element={
+            <ProtectedRoute>
+              <ErrorBoundary>
+                <MyReturns />
+              </ErrorBoundary>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/search" element={
+            <ErrorBoundary>
+              <AdvancedSearch />
+            </ErrorBoundary>
+          } />
+          
+        {/* Order Confirmation Route - PUBLIC ACCESS (no login required) */}
+         <Route path="/order-confirmation/:id" element={
+          <ErrorBoundary>
+         <OrderConfirmation />
+          </ErrorBoundary>
+} />
           
           {/* Payment Result Route */}
           <Route path="/payment-result" element={<PaymentResult />} />
@@ -227,10 +251,17 @@ function AppContent() {
               </ErrorBoundary>
             </SellerRoute>
           } />
+          <Route path="/seller/wallet" element={
+            <SellerRoute>
+              <ErrorBoundary>
+                <SellerWallet />
+              </ErrorBoundary>
+            </SellerRoute>
+          } />
           <Route path="/seller/earnings/withdraw" element={
             <SellerRoute>
               <ErrorBoundary>
-                <div className="coming-soon">Withdraw Earnings - Coming Soon</div>
+                <SellerWallet />
               </ErrorBoundary>
             </SellerRoute>
           } />

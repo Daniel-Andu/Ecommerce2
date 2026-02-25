@@ -1,0 +1,94 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║          🚀 START YOUR E-COMMERCE APPLICATION NOW 🚀             ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+📋 STEP-BY-STEP INSTRUCTIONS:
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 1: START BACKEND                                          │
+└─────────────────────────────────────────────────────────────────┘
+
+Open Terminal 1 and run:
+
+    cd backend
+    npm run dev
+
+✅ Wait for: "Server running on: http://localhost:5001"
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 2: START FRONTEND                                         │
+└─────────────────────────────────────────────────────────────────┘
+
+Open Terminal 2 (NEW terminal) and run:
+
+    cd frontend
+    npm run dev
+
+✅ Wait for: "Local: http://localhost:3002/"
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 3: OPEN IN BROWSER                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+Open your browser and go to:
+
+    http://localhost:3002
+
+🎉 You should see your beautiful homepage!
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║                    ✨ WHAT YOU'LL SEE ✨                         ║
+║                                                                  ║
+║  ✅ Beautiful hero slider with animations                       ║
+║  ✅ Category cards with hover effects                           ║
+║  ✅ Modern product grids                                        ║
+║  ✅ Notifications bell in navbar                                ║
+║  ✅ Smooth transitions everywhere                               ║
+║  ✅ Professional, modern design                                 ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+📱 TEST THESE NEW FEATURES:
+
+1. Click the bell icon (🔔) in navbar → Notifications Center
+2. Go to /returns → Request Returns page
+3. Go to /search → Advanced Search with filters
+4. Login as seller → Go to /seller/wallet → Seller Wallet
+
+
+🐛 IF YOU SEE ERRORS:
+
+Backend Error?
+  → Check backend/.env file has correct database credentials
+  → Run: cd backend && npm install
+
+Frontend Error?
+  → Check frontend/.env has: VITE_API_URL=http://localhost:5001/api
+  → Run: cd frontend && npm install
+
+Port Already in Use?
+  → Backend will try port 5001
+  → Frontend will auto-try 3002, 3003, etc.
+
+
+💡 QUICK TIPS:
+
+• Keep both terminals open while testing
+• Open browser DevTools (F12) to see console
+• Test on mobile by resizing browser window
+• All new features are now visible in the UI!
+
+
+🎊 THAT'S IT! YOUR APP IS READY TO RUN! 🎊
+
+
+Need detailed help? Read: RUN_APPLICATION.md

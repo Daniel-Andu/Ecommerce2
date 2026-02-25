@@ -3,6 +3,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  AreaChart,
+  Area
+} from 'recharts';
 import api from '../services/api';
 import './Dashboard.css';
 
@@ -14,21 +29,44 @@ export default function Dashboard() {
     totalProducts: 0,
     pendingProducts: 0,
     totalOrders: 0,
-    totalRevenue: 0
+    totalRevenue: 0,
+    recentOrders: [],
+    monthlyData: [],
+    categoryDistribution: [],
+    orderStatusData: [],
+    revenueChange: 0
   });
   const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState('month');
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FF6384', '#36A2EB'];
 
   useEffect(() => {
     loadDashboard();
-  }, []);
+  }, [timeRange]);
 
   const loadDashboard = async () => {
     try {
-      const response = await api.get('/admin/dashboard');
-      console.log('Dashboard data:', response.data); // For debugging
-      setStats(response.data);
+      setLoading(true);
+      const response = await api.get(`/admin/dashboard?range=${timeRange}`);
+      console.log('✅ Dashboard data received:', response.data);
+      
+      setStats({
+        totalUsers: response.data.totalUsers || 0,
+        totalSellers: response.data.totalSellers || 0,
+        pendingSellers: response.data.pendingSellers || 0,
+        totalProducts: response.data.totalProducts || 0,
+        pendingProducts: response.data.pendingProducts || 0,
+        totalOrders: response.data.totalOrders || 0,
+        totalRevenue: response.data.totalRevenue || 0,
+        recentOrders: response.data.recentOrders || [],
+        monthlyData: response.data.monthlyData || response.data.dailyRevenue || [],
+        categoryDistribution: response.data.categoryDistribution || [],
+        orderStatusData: response.data.orderStatusData || [],
+        revenueChange: response.data.revenueChange || 0
+      });
     } catch (error) {
-      console.error('Error loading dashboard:', error);
+      console.error('❌ Error loading dashboard:', error);
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,67 @@
+═══════════════════════════════════════════════════════════════
+  🚨 URGENT: Payment Redirect Still Not Working
+═══════════════════════════════════════════════════════════════
+
+PROBLEM:
+Render does NOT read .env files from your repository!
+You must set environment variables in Render dashboard.
+
+═══════════════════════════════════════════════════════════════
+  ✅ SOLUTION (5 Minutes)
+═══════════════════════════════════════════════════════════════
+
+1. Go to: https://dashboard.render.com
+
+2. Click your backend service: e-commerce-backend-3i6r
+
+3. Click "Environment" in left sidebar
+
+4. Click "Add Environment Variable" and add:
+
+   FRONTEND_URL = https://e-commerce-marketing.vercel.app
+   BACKEND_URL = https://e-commerce-backend-3i6r.onrender.com
+
+5. Click "Save Changes"
+
+6. Wait 2-3 minutes for redeploy
+
+7. Test: https://e-commerce-backend-3i6r.onrender.com/api/payment/debug-env
+
+   Should show:
+   {
+     "FRONTEND_URL": "https://e-commerce-marketing.vercel.app",
+     ...
+   }
+
+8. Test payment on your site
+
+═══════════════════════════════════════════════════════════════
+  📝 WHY THIS IS NEEDED
+═══════════════════════════════════════════════════════════════
+
+❌ WRONG: "I updated .env file, it should work"
+✅ RIGHT: "Render ignores .env files, must use dashboard"
+
+.env files are for LOCAL development only!
+Production needs dashboard environment variables!
+
+═══════════════════════════════════════════════════════════════
+  🔍 VERIFY IT WORKED
+═══════════════════════════════════════════════════════════════
+
+Visit this URL in your browser:
+https://e-commerce-backend-3i6r.onrender.com/api/payment/debug-env
+
+If FRONTEND_URL shows your customer site URL, it's fixed!
+If it shows "NOT SET" or wrong URL, variables weren't saved.
+
+═══════════════════════════════════════════════════════════════
+  📞 STILL NOT WORKING?
+═══════════════════════════════════════════════════════════════
+
+1. Double-check you saved the variables in Render dashboard
+2. Make sure there are no typos in the URLs
+3. Wait for the redeploy to complete (check "Logs" tab)
+4. Clear your browser cache (Ctrl+Shift+R)
+
+═══════════════════════════════════════════════════════════════
