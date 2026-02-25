@@ -1,11 +1,13 @@
 /* Profile Page - Beautiful Modern Design */
+
+/* Main Container */
 .profile-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   padding: 0;
 }
 
-/* Profile Header - Enhanced */
+/* Profile Header */
 .profile-header {
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
   padding: 3rem 0 8rem 0;
@@ -25,13 +27,8 @@
 }
 
 @keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-
-  100% {
-    left: 100%;
-  }
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .profile-header-content {
@@ -71,7 +68,7 @@
   z-index: 2;
 }
 
-/* Profile Sidebar - Enhanced */
+/* Profile Sidebar */
 .profile-sidebar {
   background: white;
   border-radius: 24px;
@@ -80,81 +77,84 @@
   position: sticky;
   top: 100px;
   overflow: hidden;
+  max-height: calc(100vh - 120px);
 }
 
-/* ont-size: 3rem;
-  font-weight: 700;
-  color: white;
-  border: 4px solid #e2e8f0;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+/* Profile Avatar Section */
+.profile-avatar-section {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+  border-bottom: 1px solid #E2E8F0;
 }
 
-.avatar-upload-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: 3px solid white;
+.profile-avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
   cursor: pointer;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  transition: all 0.3s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.avatar-upload-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+.profile-avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
 }
 
-.avatar-upload-btn input[type="file"] {
-  display: none;
+.uploading-text {
+  color: #6366F1;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
 }
 
-.profile-name {
+.profile-avatar-section h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.5rem;
+  color: #0F172A;
+  margin: 0 0 0.5rem 0;
 }
 
 .profile-email {
-  color: #64748b;
+  color: #64748B;
   font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
 .profile-role {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-  color: #667eea;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: capitalize;
-}
-
-.profile-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-value {
+  padding: 0.5re
   font-size: 1.75rem;
   font-weight: 700;
   color: #0f172a;
