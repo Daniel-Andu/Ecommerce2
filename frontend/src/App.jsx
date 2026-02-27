@@ -188,6 +188,15 @@ function AppContent() {
           {/* Payment Result Route */}
           <Route path="/payment-result" element={<PaymentResult />} />
           
+          {/* Seller Pending Route - Accessible for pending sellers */}
+          <Route path="/seller/pending" element={
+            <ProtectedRoute requiredRole={['seller', 'admin']}>
+              <ErrorBoundary>
+                <SellerPending />
+              </ErrorBoundary>
+            </ProtectedRoute>
+          } />
+          
           {/* Seller Routes - All protected by SellerRoute and ErrorBoundary */}
           <Route path="/seller" element={
             <SellerRoute>
