@@ -32,13 +32,13 @@
 //   const loadDashboardData = async () => {
 //     try {
 //       setLoading(true);
-      
+
 //       // Load seller dashboard data from API
 //       const dashboardData = await api.seller.dashboard();
 //       setStats(dashboardData.stats);
 //       setRecentOrders(dashboardData.recentOrders || []);
 //       setRecentProducts(dashboardData.recentProducts || []);
-      
+
 //     } catch (error) {
 //       console.error('Error loading dashboard:', error);
 //       toast.error('Failed to load dashboard data');
@@ -168,7 +168,7 @@
 //             <h2>Recent Orders</h2>
 //             <Link to="/seller/orders" className="view-all">View all →</Link>
 //           </div>
-          
+
 //           <div className="table-responsive">
 //             <table className="orders-table">
 //               <thead>
@@ -221,7 +221,7 @@
 //             <h2>Your Products</h2>
 //             <Link to="/seller/products" className="view-all">Manage products →</Link>
 //           </div>
-          
+
 //           <div className="products-grid">
 //             {recentProducts.length > 0 ? (
 //               recentProducts.map(product => (
@@ -302,7 +302,7 @@
 //   const navigate = useNavigate();
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
-  
+
 //   // Initialize stats with default values to prevent undefined errors
 //   const [stats, setStats] = useState({
 //     totalProducts: 0,
@@ -312,7 +312,7 @@
 //     balance: 0,
 //     pendingBalance: 0
 //   });
-  
+
 //   const [recentOrders, setRecentOrders] = useState([]);
 //   const [recentProducts, setRecentProducts] = useState([]);
 
@@ -331,11 +331,11 @@
 //     try {
 //       setLoading(true);
 //       setError(null);
-      
+
 //       console.log('Loading dashboard data...');
 //       const dashboardData = await api.seller.dashboard();
 //       console.log('Dashboard data received:', dashboardData);
-      
+
 //       // Safely update state with default values if data is missing
 //       setStats({
 //         totalProducts: dashboardData?.totalProducts ?? 0,
@@ -345,10 +345,10 @@
 //         balance: dashboardData?.balance ?? 0,
 //         pendingBalance: dashboardData?.pendingBalance ?? 0
 //       });
-      
+
 //       setRecentOrders(dashboardData?.recentOrders || []);
 //       setRecentProducts(dashboardData?.recentProducts || []);
-      
+
 //     } catch (error) {
 //       console.error('Error loading dashboard:', error);
 //       setError(error.message || 'Failed to load dashboard data');
@@ -520,7 +520,7 @@
 //             <h2>Recent Orders</h2>
 //             <Link to="/seller/orders" className="view-all">View all →</Link>
 //           </div>
-          
+
 //           <div className="table-responsive">
 //             <table className="orders-table">
 //               <thead>
@@ -575,7 +575,7 @@
 //             <h2>Your Products</h2>
 //             <Link to="/seller/products" className="view-all">Manage products →</Link>
 //           </div>
-          
+
 //           <div className="products-grid">
 //             {recentProducts.length > 0 ? (
 //               recentProducts.map(product => (
@@ -653,6 +653,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import * as api from '../api';
+import { getImageUrl, handleImageError as handleImgError } from '../utils/imageUtils';
 import toast from 'react-hot-toast';
 import './SellerDashboard.css';
 
@@ -661,7 +662,7 @@ export default function SellerDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // Initialize stats with default values to prevent undefined errors
   const [stats, setStats] = useState({
     totalProducts: 0,
@@ -671,7 +672,7 @@ export default function SellerDashboard() {
     balance: 0,
     pendingBalance: 0
   });
-  
+
   const [recentOrders, setRecentOrders] = useState([]);
   const [recentProducts, setRecentProducts] = useState([]);
 
@@ -690,11 +691,11 @@ export default function SellerDashboard() {
     try {
       setLoading(true);
       setError(null);
-      
+
       console.log('Loading dashboard data...');
       const dashboardData = await api.seller.dashboard();
       console.log('Dashboard data received:', dashboardData);
-      
+
       // Safely update state with nullish coalescing to handle undefined values
       setStats({
         totalProducts: dashboardData?.totalProducts ?? 0,
@@ -704,10 +705,10 @@ export default function SellerDashboard() {
         balance: dashboardData?.balance ?? 0,
         pendingBalance: dashboardData?.pendingBalance ?? 0
       });
-      
+
       setRecentOrders(dashboardData?.recentOrders || []);
       setRecentProducts(dashboardData?.recentProducts || []);
-      
+
     } catch (error) {
       console.error('Error loading dashboard:', error);
       setError(error.message || 'Failed to load dashboard data');
@@ -879,7 +880,7 @@ export default function SellerDashboard() {
             <h2>Recent Orders</h2>
             <Link to="/seller/orders" className="view-all">View all →</Link>
           </div>
-          
+
           <div className="table-responsive">
             <table className="orders-table">
               <thead>
@@ -934,16 +935,20 @@ export default function SellerDashboard() {
             <h2>Your Products</h2>
             <Link to="/seller/products" className="view-all">Manage products →</Link>
           </div>
-          
+
           <div className="products-grid">
             {recentProducts.length > 0 ? (
               recentProducts.map(product => (
                 <div key={product.id} className="product-card">
                   <div className="product-image">
                     {product.images && product.images.length > 0 ? (
-                      <img src={product.images[0]} alt={product.name} />
+                      <img
+                        src={getImageUrl(product.images[0])}
+                        alt={product.name}
+                        onError={handleImgError}
+                      />
                     ) : (
-                      <div className="no-image"></div>
+                      <div className="no-image">📷</div>
                     )}
                   </div>
                   <div className="product-info">

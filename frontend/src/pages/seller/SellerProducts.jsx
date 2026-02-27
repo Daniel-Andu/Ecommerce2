@@ -79,10 +79,13 @@ export default function SellerProducts() {
                 <tr key={product.id}>
                   <td>
                     <img
-                      src={getImageUrl(product.images?.[0], '/placeholder.jpg')}
+                      src={getImageUrl(product.images?.[0])}
                       alt={product.name}
                       className="product-thumb"
-                      onError={handleImageError}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://placehold.co/100x100/6366F1/white?text=No+Image';
+                      }}
                     />
                   </td>
                   <td>
