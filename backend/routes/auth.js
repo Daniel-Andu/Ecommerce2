@@ -1616,8 +1616,9 @@ router.post('/profile/image', auth, profileUpload.single('profile_image'), async
       return res.status(400).json({ message: 'No image file uploaded' });
     }
 
-    // Create the image URL path
-    const image_url = `/uploads/profile-images/${req.file.filename}`;
+    // Create the full image URL
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const image_url = `${baseUrl}/uploads/profile-images/${req.file.filename}`;
 
     // Update user's profile image in database
     await pool.query(

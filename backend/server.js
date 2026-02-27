@@ -45,6 +45,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
+  'https://ecommerce-customer-site.vercel.app',
+  'https://ecommerce-admin-panel.vercel.app',
   'https://e-commerce-marketing.vercel.app',
   'https://e-commerce-marketing-tu4h.vercel.app',
   'https://e-commerce-backend-3i6r.onrender.com',

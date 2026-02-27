@@ -88,10 +88,10 @@ export default function SellerProducts() {
                   <td>
                     <strong>{product.name}</strong>
                     <br />
-                    <small>{product.category}</small>
+                    <small>{product.category_name}</small>
                   </td>
-                  <td>ETB{product.price}</td>
-                  <td>{product.stock}</td>
+                  <td>ETB{product.sale_price || product.base_price}</td>
+                  <td>{product.stock_quantity}</td>
                   <td>
                     <span className={`status-badge ${product.status}`}>
                       {product.status}
