@@ -220,6 +220,9 @@ export const seller = {
   dashboard: () => request('/seller/dashboard'), 
   products: () => request('/seller/products'), 
   
+  // Get single product for editing
+  getProduct: (id) => request('/seller/products/' + id),
+  
   // Add product with images - ACCEPTS FORMDATA DIRECTLY
   addProduct: (formData) => {
     // IMPORTANT: Pass FormData directly, don't stringify
