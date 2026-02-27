@@ -82,30 +82,16 @@
 /* Login button - outlined style */
 .header nav a[href="/login"] {
   border: 2px solid white;
-  padding: 8px 24px;
-  background: transparent;
-  font-weight: 600;
-}
-
-.header nav a[href="/login"]:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: white;
+  padding: 8px 20px;
 }
 
 /* Register button - filled style */
 .header nav a[href="/register"] {
   background: white;
   color: var(--primary);
-  padding: 8px 24px;
+  padding: 8px 20px;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border: 2px solid white;
-}
-
-.header nav a[href="/register"]:hover {
-  background: rgba(255, 255, 255, 0.95);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .menu-btn {
