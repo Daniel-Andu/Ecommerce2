@@ -317,6 +317,35 @@
 }
 
 /* Responsive Design */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1.5rem;
+  }
+
+  .login-card {
+    padding: 2.5rem 2rem;
+    max-width: 100%;
+  }
+
+  .login-header h2 {
+    font-size: 1.75rem;
+  }
+
+  .login-header p {
+    font-size: 0.95rem;
+  }
+
+  .form-group input {
+    padding: 0.875rem;
+    font-size: 1rem;
+  }
+
+  .login-btn {
+    padding: 0.875rem;
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 640px) {
   .login-container {
     padding: 1rem;
@@ -326,8 +355,12 @@
     padding: 2rem 1.5rem;
   }
 
+  .login-header .logo {
+    font-size: 2.25rem;
+  }
+
   .login-header h2 {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
   }
 
   .form-options {
@@ -335,19 +368,90 @@
     align-items: flex-start;
     gap: 1rem;
   }
+
+  .social-login {
+    flex-direction: column;
+  }
+
+  .social-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
+  .login-container {
+    padding: 0.75rem;
+  }
+
   .login-header .logo {
     font-size: 2rem;
   }
 
   .login-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+  }
+
+  .login-header p {
+    font-size: 0.9rem;
   }
 
   .login-card {
-    padding: 1.5rem;
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .login-btn {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .checkbox span {
+    font-size: 0.9rem;
+  }
+
+  .forgot-link {
+    font-size: 0.9rem;
+  }
+
+  .register-link {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .login-container {
+    padding: 0.5rem;
+  }
+
+  .login-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .login-header .logo {
+    font-size: 1.75rem;
+  }
+
+  .login-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .form-group input {
+    padding: 0.625rem;
+    font-size: 0.9rem;
+  }
+
+  .login-btn {
+    padding: 0.625rem;
+    font-size: 0.9rem;
   }
 }
 

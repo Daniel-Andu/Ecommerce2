@@ -375,13 +375,49 @@
 }
 
 /* Responsive Design */
+@media (max-width: 992px) {
+  .register-card {
+    max-width: 550px;
+  }
+
+  .role-selection {
+    gap: 0.875rem;
+  }
+
+  .role-option {
+    padding: 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .register-container {
+    padding: 1.5rem;
+  }
+
+  .register-card {
+    padding: 2.5rem 2rem;
+    max-width: 100%;
+  }
+
+  .register-header h2 {
+    font-size: 1.75rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
 
   .role-selection {
     grid-template-columns: 1fr;
+  }
+
+  .role-option {
+    padding: 1.5rem;
+  }
+
+  .register-btn {
+    padding: 0.875rem;
+    font-size: 1rem;
   }
 }
 
@@ -394,22 +430,129 @@
     padding: 2rem 1.5rem;
   }
 
+  .register-header .logo {
+    font-size: 2.25rem;
+  }
+
   .register-header h2 {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .terms-checkbox {
+    padding: 0.875rem;
+  }
+
+  .terms-checkbox label {
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
+  .register-container {
+    padding: 0.75rem;
+  }
+
   .register-header .logo {
     font-size: 2rem;
   }
 
   .register-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+  }
+
+  .register-header p {
+    font-size: 0.9rem;
   }
 
   .register-card {
-    padding: 1.5rem;
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .role-option .role-icon {
+    font-size: 2rem;
+  }
+
+  .role-option .role-name {
+    font-size: 1rem;
+  }
+
+  .role-option .role-desc {
+    font-size: 0.8rem;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.625rem;
+    font-size: 0.9rem;
+  }
+
+  .register-btn {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .terms-checkbox {
+    padding: 0.75rem;
+  }
+
+  .terms-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .terms-checkbox label {
+    font-size: 0.85rem;
+  }
+
+  .login-link {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .register-container {
+    padding: 0.5rem;
+  }
+
+  .register-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .register-header .logo {
+    font-size: 1.75rem;
+  }
+
+  .register-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .role-option {
+    padding: 1rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .register-btn {
+    padding: 0.625rem;
+    font-size: 0.9rem;
   }
 }
 
