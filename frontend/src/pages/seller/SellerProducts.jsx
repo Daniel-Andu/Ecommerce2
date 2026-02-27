@@ -99,9 +99,15 @@ export default function SellerProducts() {
                   </td>
                   <td>
                     <div className="action-buttons">
-                      <Link to={`/products/${product.slug}`} className="btn-view">
-                        View
-                      </Link>
+                      {product.status === 'approved' ? (
+                        <Link to={`/products/${product.slug}`} className="btn-view">
+                          View
+                        </Link>
+                      ) : (
+                        <span className="btn-view disabled" title="Product pending approval">
+                          Pending
+                        </span>
+                      )}
                       <Link to={`/seller/products/edit/${product.id}`} className="btn-edit">
                         Edit
                       </Link>
