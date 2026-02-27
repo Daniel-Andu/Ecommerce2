@@ -1579,20 +1579,8 @@ router.patch('/profile', auth, async (req, res) => {
 });
 
 // ==================== UPLOAD PROFILE IMAGE ====================
-// Configure multer for profile image uploads
-const profileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads/profile-images');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Configure multer for profile image uploads with Cloudinary
+const { profileStorage } = require('../config/cloudinary');
 
 const profileUpload = multer({
   storage: profileStorage,
@@ -1616,9 +1604,8 @@ router.post('/profile/image', auth, profileUpload.single('profile_image'), async
       return res.status(400).json({ message: 'No image file uploaded' });
     }
 
-    // Create the full image URL
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-    const image_url = `${baseUrl}/uploads/profile-images/${req.file.filename}`;
+    // Cloudinary provides the full image URL in req.file.path
+    const image_url = req.file.path;
 
     // Update user's profile image in database
     await pool.query(

@@ -908,26 +908,10 @@ const path = require('path');
 const fs = require('fs');
 const pool = require('../config/db');
 const { auth, requireRole } = require('../middleware/auth');
+const { productStorage } = require('../config/cloudinary');
 const router = express.Router();
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '../uploads/products');
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    // Generate unique filename
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  }
-});
-
+// Configure multer for file uploads with Cloudinary
 const fileFilter = (req, file, cb) => {
   // Accept only images
   if (file.mimetype.startsWith('image/')) {
@@ -938,7 +922,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage: storage,
+  storage: productStorage,
   fileFilter: fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
@@ -1279,7 +1263,8 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
     if (files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const imageUrl = `${baseUrl}/uploads/products/${file.filename}`;
+        // Cloudinary provides the full URL in file.path
+        const imageUrl = file.path;
 
         await connection.query(
           'INSERT INTO product_images (product_id, image_url, alt_text, sort_order) VALUES (?, ?, ?, ?)',
@@ -1456,7 +1441,8 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const imageUrl = `${baseUrl}/uploads/products/${file.filename}`;
+        // Cloudinary provides the full URL in file.path
+        const imageUrl = file.path;
 
         await connection.query(
           'INSERT INTO product_images (product_id, image_url, alt_text, sort_order) VALUES (?, ?, ?, ?)',
