@@ -1,4 +1,4 @@
-/* Modern Login Page Styles */
+/* Modern Login Page Styles - Matching Register Page Exactly */
 
 .login-container {
   min-height: 100vh;
@@ -102,7 +102,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .form-group {
@@ -123,19 +123,12 @@
   align-items: center;
 }
 
-.input-icon {
-  position: absolute;
-  left: 1rem;
-  color: #94a3b8;
-  font-size: 1.25rem;
-}
-
 .input-group input {
   width: 100%;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 0.875rem 1rem;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all 0.3s;
   background: #f8fafc;
 }
@@ -206,7 +199,7 @@
   color: #764ba2;
 }
 
-/* Login Button - Matches Register Button Style Exactly */
+/* Login Button - Matching Register Button Exactly */
 .login-btn {
   width: 100%;
   padding: 1rem;
@@ -275,48 +268,6 @@
   color: #764ba2;
 }
 
-/* Social Login Buttons (Optional) */
-.social-login {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.social-btn {
-  flex: 1;
-  padding: 0.875rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-weight: 600;
-  color: #475569;
-}
-
-.social-btn:hover {
-  border-color: #667eea;
-  background: #f8fafc;
-}
-
-/* Divider */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  color: #94a3b8;
-  font-size: 0.875rem;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #e2e8f0;
-}
-
 /* Responsive Design */
 @media (max-width: 640px) {
   .login-container {
@@ -366,19 +317,4 @@
 /* Success State */
 .input-group.success input {
   border-color: #10b981;
-}
-
-/* Loading Overlay */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 24px;
-  z-index: 10;
 }
