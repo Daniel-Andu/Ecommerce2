@@ -206,6 +206,7 @@
   color: #764ba2;
 }
 
+/* Login Button - Matches Register Button Style Exactly */
 .login-btn {
   width: 100%;
   padding: 1rem;
