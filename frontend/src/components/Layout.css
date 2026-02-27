@@ -1,28 +1,285 @@
-.layout { min-height: 100vh; display: flex; flex-direction: column; }
-.main { flex: 1; }
-.header { background: var(--primary); color: white; padding: 12px 0; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
-.header-inner { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-.logo { font-weight: 700; font-size: 1.35rem; }
-.search-form { flex: 1; min-width: 180px; max-width: 400px; display: flex; background: rgba(255,255,255,0.2); border-radius: var(--radius); overflow: hidden; }
-.search-form input { flex: 1; border: none; padding: 10px 14px; background: transparent; color: white; }
-.search-form input::placeholder { color: rgba(255,255,255,0.8); }
-.search-form button { padding: 10px 14px; background: rgba(255,255,255,0.2); color: white; }
-.header nav { display: flex; align-items: center; gap: 16px; }
-.header nav a, .header nav button { color: white; font-weight: 500; padding: 6px 10px; border-radius: 8px; background: none; }
-.header nav a:hover, .header nav button:hover { background: rgba(255,255,255,0.2); }
-.menu-btn { display: none; background: none; color: white; font-size: 1.5rem; padding: 4px 8px; }
-@media (max-width: 768px) {
-  .menu-btn { display: block; }
-  .search-form { order: 3; width: 100%; max-width: none; }
-  .header nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--primary); flex-direction: column; padding: 16px; }
-  .header nav.open { display: flex; }
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.footer { background: var(--text); color: white; padding: 24px; text-align: center; margin-top: auto; }
-.admin-layout, .seller-layout { flex-direction: row; }
-.sidebar { width: 240px; background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; gap: 16px; min-height: 100vh; }
-.sidebar .logo { color: white; font-weight: 700; font-size: 1.25rem; }
-.sidebar nav { display: flex; flex-direction: column; gap: 8px; }
-.sidebar nav a { color: white; padding: 10px 12px; border-radius: var(--radius); }
-.sidebar nav a:hover { background: rgba(255,255,255,0.2); }
-.logout-btn { margin-top: auto; padding: 10px; background: rgba(255,255,255,0.2); color: white; border-radius: var(--radius); }
-.main-content { flex: 1; padding: 24px; overflow: auto; }
+
+.main {
+  flex: 1;
+}
+
+.header {
+  background: var(--primary);
+  color: white;
+  padding: 12px 0;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.35rem;
+}
+
+.search-form {
+  flex: 1;
+  min-width: 180px;
+  max-width: 400px;
+  display: flex;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.search-form input {
+  flex: 1;
+  border: none;
+  padding: 10px 14px;
+  background: transparent;
+  color: white;
+}
+
+.search-form input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.search-form button {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header nav a,
+.header nav button {
+  color: white;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 24px;
+  background: none;
+  transition: all 0.3s ease;
+}
+
+.header nav a:hover,
+.header nav button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Login button - outlined style */
+.header nav a[href="/login"] {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  padding: 6px 20px;
+}
+
+.header nav a[href="/login"]:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+}
+
+/* Register button - filled style */
+.header nav a[href="/register"] {
+  background: white;
+  color: var(--primary);
+  padding: 8px 24px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header nav a[href="/register"]:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.menu-btn {
+  display: none;
+  background: none;
+  color: white;
+  font-size: 1.5rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  border: none;
+}
+
+@media (max-width: 992px) {
+  .header-inner {
+    gap: 12px;
+  }
+
+  .header nav {
+    gap: 12px;
+  }
+
+  .header nav a,
+  .header nav button {
+    padding: 6px 12px;
+    font-size: 0.95rem;
+  }
+
+  .header nav a[href="/login"] {
+    padding: 4px 16px;
+  }
+
+  .header nav a[href="/register"] {
+    padding: 6px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-btn {
+    display: block;
+  }
+
+  .header-inner {
+    position: relative;
+  }
+
+  .search-form {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    margin-top: 8px;
+  }
+
+  .header nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--primary);
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 12px 12px;
+  }
+
+  .header nav.open {
+    display: flex;
+  }
+
+  .header nav a,
+  .header nav button {
+    width: 100%;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  .header nav a[href="/login"] {
+    padding: 10px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+  }
+
+  .header nav a[href="/register"] {
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .search-form input {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+
+  .search-form button {
+    padding: 8px 12px;
+  }
+
+  .header nav {
+    padding: 12px;
+  }
+
+  .header nav a,
+  .header nav button {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+
+  .header nav a[href="/login"] {
+    padding: 8px 14px;
+  }
+
+  .header nav a[href="/register"] {
+    padding: 10px 14px;
+  }
+}
+
+.footer {
+  background: var(--text);
+  color: white;
+  padding: 24px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.admin-layout,
+.seller-layout {
+  flex-direction: row;
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--primary);
+  color: white;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100vh;
+}
+
+.sidebar .logo {
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar nav a {
+  color: white;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+}
+
+.sidebar nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.logout-btn {
+  margin-top: auto;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: var(--radius);
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow: auto;
+}
