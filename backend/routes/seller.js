@@ -57,14 +57,14 @@
 // // Check seller status middleware - only approved sellers can proceed
 // const checkSellerApproved = async (req, res, next) => {
 //   const seller = await getSeller(req.user.id);
-  
+
 //   if (!seller) {
 //     return res.status(403).json({ 
 //       success: false,
 //       message: 'Seller account not found' 
 //     });
 //   }
-  
+
 //   if (seller.status !== 'approved') {
 //     return res.status(403).json({ 
 //       success: false,
@@ -72,7 +72,7 @@
 //       status: seller.status 
 //     });
 //   }
-  
+
 //   req.seller = seller;
 //   next();
 // };
@@ -157,7 +157,7 @@
 //          LIMIT 1`,
 //         [product.id]
 //       );
-      
+
 //       return {
 //         id: product.id,
 //         name: product.name,
@@ -234,7 +234,7 @@
 //          ORDER BY sort_order ASC, id ASC`,
 //         [product.id]
 //       );
-      
+
 //       return {
 //         ...product,
 //         images: images.map(img => img.image_url),
@@ -266,7 +266,7 @@
 //     }
 
 //     const product = rows[0];
-    
+
 //     // Get product images
 //     const [images] = await pool.query(
 //       `SELECT image_url 
@@ -275,7 +275,7 @@
 //        ORDER BY sort_order ASC, id ASC`,
 //       [product.id]
 //     );
-    
+
 //     product.images = images.map(img => img.image_url);
 //     product.base_price = parseFloat(product.base_price || 0);
 //     product.sale_price = product.sale_price ? parseFloat(product.sale_price) : null;
@@ -292,7 +292,7 @@
 //   const connection = await pool.getConnection();
 //   try {
 //     await connection.beginTransaction();
-    
+
 //     // Get form data from req.body (multer parses it)
 //     const { 
 //       name, 
@@ -307,7 +307,7 @@
 
 //     // Get uploaded files
 //     const files = req.files || [];
-    
+
 //     console.log('Adding product:', { 
 //       name, 
 //       category_id, 
@@ -321,7 +321,7 @@
 //     if (!name || name.trim().length === 0) {
 //       return res.status(400).json({ message: 'Product name is required' });
 //     }
-    
+
 //     if (!base_price || parseFloat(base_price) <= 0) {
 //       return res.status(400).json({ message: 'Valid base price is required' });
 //     }
@@ -368,7 +368,7 @@
 //       for (let i = 0; i < files.length; i++) {
 //         const file = files[i];
 //         const imageUrl = `${baseUrl}/uploads/products/${file.filename}`;
-        
+
 //         await connection.query(
 //           'INSERT INTO product_images (product_id, image_url, alt_text, sort_order) VALUES (?, ?, ?, ?)',
 //           [productId, imageUrl, name, i]
@@ -386,18 +386,18 @@
 //        WHERE p.id = ?`,
 //       [productId]
 //     );
-    
+
 //     // Get images for response
 //     const [productImages] = await connection.query(
 //       'SELECT image_url FROM product_images WHERE product_id = ? ORDER BY sort_order ASC',
 //       [productId]
 //     );
-    
+
 //     const responseProduct = {
 //       ...product[0],
 //       images: productImages.map(img => img.image_url)
 //     };
-    
+
 //     res.status(201).json({
 //       success: true,
 //       message: 'Product added successfully and pending approval',
@@ -421,7 +421,7 @@
 //   const connection = await pool.getConnection();
 //   try {
 //     await connection.beginTransaction();
-    
+
 //     // Check if product exists and belongs to seller - ✅ FIXED: Use seller.id
 //     const [existing] = await connection.query(
 //       'SELECT * FROM products WHERE id = ? AND seller_id = ?',
@@ -445,63 +445,63 @@
 //       is_featured,
 //       existing_images 
 //     } = req.body;
-    
+
 //     const files = req.files || [];
 //     const baseUrl = `${req.protocol}://${req.get('host')}`;
-    
+
 //     const updates = [];
 //     const values = [];
-    
+
 //     if (name !== undefined && name.trim()) {
 //       updates.push('name = ?');
 //       values.push(name.trim());
-      
+
 //       const newSlug = name.toLowerCase()
 //                          .replace(/\s+/g, '-')
 //                          .replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
 //       updates.push('slug = ?');
 //       values.push(newSlug);
 //     }
-    
+
 //     if (base_price !== undefined) {
 //       updates.push('base_price = ?');
 //       values.push(parseFloat(base_price));
 //     }
-    
+
 //     if (sale_price !== undefined) {
 //       updates.push('sale_price = ?');
 //       values.push(sale_price ? parseFloat(sale_price) : null);
 //     }
-    
+
 //     if (stock_quantity !== undefined) {
 //       updates.push('stock_quantity = ?');
 //       values.push(parseInt(stock_quantity));
 //     }
-    
+
 //     if (category_id !== undefined) {
 //       updates.push('category_id = ?');
 //       values.push(category_id || null);
 //     }
-    
+
 //     if (description !== undefined) {
 //       updates.push('description = ?');
 //       values.push(description || null);
 //     }
-    
+
 //     if (tags !== undefined) {
 //       updates.push('tags = ?');
 //       values.push(tags || null);
 //     }
-    
+
 //     if (is_featured !== undefined) {
 //       updates.push('is_featured = ?');
 //       values.push(is_featured === 'true' || is_featured === true ? 1 : 0);
 //     }
-    
+
 //     if (updates.length > 0) {
 //       updates.push('updated_at = NOW()');
 //       values.push(req.params.id);
-      
+
 //       await connection.query(
 //         `UPDATE products SET ${updates.join(', ')} WHERE id = ?`,
 //         values
@@ -539,13 +539,13 @@
 //         'SELECT COALESCE(MAX(sort_order), -1) as max FROM product_images WHERE product_id = ?',
 //         [req.params.id]
 //       );
-      
+
 //       let startOrder = maxOrder[0].max + 1;
-      
+
 //       for (let i = 0; i < files.length; i++) {
 //         const file = files[i];
 //         const imageUrl = `${baseUrl}/uploads/products/${file.filename}`;
-        
+
 //         await connection.query(
 //           'INSERT INTO product_images (product_id, image_url, alt_text, sort_order) VALUES (?, ?, ?, ?)',
 //           [req.params.id, imageUrl, name || product.name, startOrder + i]
@@ -563,18 +563,18 @@
 //        WHERE p.id = ?`,
 //       [req.params.id]
 //     );
-    
+
 //     // Get updated images
 //     const [productImages] = await connection.query(
 //       'SELECT image_url FROM product_images WHERE product_id = ? ORDER BY sort_order ASC',
 //       [req.params.id]
 //     );
-    
+
 //     const responseProduct = {
 //       ...updated[0],
 //       images: productImages.map(img => img.image_url)
 //     };
-    
+
 //     res.json({
 //       success: true,
 //       message: 'Product updated successfully',
@@ -597,7 +597,7 @@
 //   const connection = await pool.getConnection();
 //   try {
 //     await connection.beginTransaction();
-    
+
 //     // Check if product exists and belongs to seller - ✅ FIXED: Use seller.id
 //     const [existing] = await connection.query(
 //       'SELECT id FROM products WHERE id = ? AND seller_id = ?',
@@ -707,11 +707,11 @@
 //        WHERE o.id = ? AND p.seller_id = ?`,
 //       [req.params.id, req.seller.id]  // ✅ FIXED: Use seller.id
 //     );
-    
+
 //     if (!orders.length) {
 //       return res.status(404).json({ message: 'Order not found' });
 //     }
-    
+
 //     const [items] = await pool.query(
 //       `SELECT oi.*, p.name, p.slug 
 //        FROM order_items oi 
@@ -719,7 +719,7 @@
 //        WHERE oi.order_id = ?`,
 //       [req.params.id]
 //     );
-    
+
 //     res.json({
 //       ...orders[0],
 //       items
@@ -734,16 +734,16 @@
 // router.patch('/orders/:id/status', checkSellerApproved, async (req, res) => {
 //   try {
 //     const { status } = req.body;
-    
+
 //     if (!status) {
 //       return res.status(400).json({ message: 'Status is required' });
 //     }
-    
+
 //     const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 //     if (!validStatuses.includes(status)) {
 //       return res.status(400).json({ message: 'Invalid status' });
 //     }
-    
+
 //     // Check if seller has items in this order - ✅ FIXED: Use seller.id
 //     const [check] = await pool.query(
 //       `SELECT oi.id 
@@ -752,20 +752,20 @@
 //        WHERE oi.order_id = ? AND p.seller_id = ?`,
 //       [req.params.id, req.seller.id]  // ✅ FIXED: Use seller.id
 //     );
-    
+
 //     if (!check.length) {
 //       return res.status(403).json({ message: 'You do not have permission to update this order' });
 //     }
-    
+
 //     const [result] = await pool.query(
 //       'UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?',
 //       [status, req.params.id]
 //     );
-    
+
 //     if (result.affectedRows === 0) {
 //       return res.status(404).json({ message: 'Order not found' });
 //     }
-    
+
 //     res.json({ 
 //       success: true,
 //       message: 'Order status updated successfully' 
@@ -787,7 +787,7 @@
 //       'SELECT balance, pending_balance FROM sellers WHERE id = ?',
 //       [sellerId]
 //     );
-    
+
 //     const [totalEarnings] = await pool.query(
 //       `SELECT COALESCE(SUM(oi.total_price), 0) as total
 //        FROM order_items oi
@@ -796,7 +796,7 @@
 //        WHERE p.seller_id = ? AND o.payment_status = 'paid'`,
 //       [sellerId]  // ✅ FIXED: Use seller.id
 //     );
-    
+
 //     const [pendingEarnings] = await pool.query(
 //       `SELECT COALESCE(SUM(oi.total_price), 0) as total
 //        FROM order_items oi
@@ -805,7 +805,7 @@
 //        WHERE p.seller_id = ? AND o.payment_status = 'pending'`,
 //       [sellerId]  // ✅ FIXED: Use seller.id
 //     );
-    
+
 //     const [monthly] = await pool.query(
 //       `SELECT 
 //         DATE_FORMAT(o.created_at, '%Y-%m') as month,
@@ -819,7 +819,7 @@
 //        LIMIT 6`,
 //       [sellerId]  // ✅ FIXED: Use seller.id
 //     );
-    
+
 //     res.json({
 //       success: true,
 //       stats: {
@@ -847,34 +847,34 @@
 //   const connection = await pool.getConnection();
 //   try {
 //     await connection.beginTransaction();
-    
+
 //     const { amount } = req.body;
-    
+
 //     if (!amount || amount <= 0) {
 //       return res.status(400).json({ message: 'Valid amount is required' });
 //     }
-    
+
 //     const [seller] = await connection.query(
 //       'SELECT balance FROM sellers WHERE id = ?',
 //       [req.seller.id]
 //     );
-    
+
 //     if (!seller.length || seller[0].balance < amount) {
 //       return res.status(400).json({ message: 'Insufficient balance' });
 //     }
-    
+
 //     await connection.query(
 //       'UPDATE sellers SET balance = balance - ?, pending_balance = pending_balance + ? WHERE id = ?',
 //       [amount, amount, req.seller.id]
 //     );
-    
+
 //     await connection.commit();
-    
+
 //     res.json({
 //       success: true,
 //       message: 'Withdrawal request submitted successfully'
 //     });
-    
+
 //   } catch (err) {
 //     await connection.rollback();
 //     console.error('Withdrawal error:', err);
@@ -937,7 +937,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
@@ -952,7 +952,7 @@ router.use(requireRole('seller', 'admin'));
 // Helper to get seller row
 async function getSeller(userId) {
   const [rows] = await pool.query(
-    'SELECT * FROM sellers WHERE user_id = ?', 
+    'SELECT * FROM sellers WHERE user_id = ?',
     [userId]
   );
   return rows[0] || null;
@@ -961,22 +961,22 @@ async function getSeller(userId) {
 // Check seller status middleware - only approved sellers can proceed
 const checkSellerApproved = async (req, res, next) => {
   const seller = await getSeller(req.user.id);
-  
+
   if (!seller) {
-    return res.status(403).json({ 
+    return res.status(403).json({
       success: false,
-      message: 'Seller account not found' 
+      message: 'Seller account not found'
     });
   }
-  
+
   if (seller.status !== 'approved') {
-    return res.status(403).json({ 
+    return res.status(403).json({
       success: false,
       message: 'Your seller account is pending approval. Please wait for admin approval.',
-      status: seller.status 
+      status: seller.status
     });
   }
-  
+
   req.seller = seller;
   next();
 };
@@ -1059,7 +1059,7 @@ router.get('/dashboard', checkSellerApproved, async (req, res) => {
          LIMIT 1`,
         [product.id]
       );
-      
+
       return {
         id: product.id,
         name: product.name,
@@ -1106,8 +1106,8 @@ router.get('/dashboard', checkSellerApproved, async (req, res) => {
 
   } catch (err) {
     console.error('Seller dashboard error:', err);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: err.message || 'Failed to load dashboard'
     });
   }
@@ -1136,7 +1136,7 @@ router.get('/products', checkSellerApproved, async (req, res) => {
          ORDER BY sort_order ASC, id ASC`,
         [product.id]
       );
-      
+
       return {
         ...product,
         images: images.map(img => img.image_url),
@@ -1169,7 +1169,7 @@ router.get('/products/:id', checkSellerApproved, async (req, res) => {
     }
 
     const product = rows[0];
-    
+
     // Get product images
     const [images] = await pool.query(
       `SELECT image_url 
@@ -1178,7 +1178,7 @@ router.get('/products/:id', checkSellerApproved, async (req, res) => {
        ORDER BY sort_order ASC, id ASC`,
       [product.id]
     );
-    
+
     product.images = images.map(img => img.image_url);
     product.base_price = parseFloat(product.base_price || 0);
     product.sale_price = product.sale_price ? parseFloat(product.sale_price) : null;
@@ -1196,14 +1196,14 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-    
+
     // Get form data from req.body
-    const { 
-      name, 
-      category_id, 
-      description, 
-      base_price, 
-      sale_price, 
+    const {
+      name,
+      category_id,
+      description,
+      base_price,
+      sale_price,
       stock_quantity,
       tags,
       is_featured
@@ -1211,7 +1211,7 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
 
     // Get uploaded files
     const files = req.files || [];
-    
+
     // FIXED: Parse stock_quantity properly
     let stockQty = 0;
     if (stock_quantity !== undefined && stock_quantity !== null && stock_quantity !== '') {
@@ -1220,10 +1220,10 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
         stockQty = 0;
       }
     }
-    
-    console.log('Adding product:', { 
-      name, 
-      category_id, 
+
+    console.log('Adding product:', {
+      name,
+      category_id,
       base_price,
       stock_quantity: stockQty, // Log parsed stock
       filesCount: files.length,
@@ -1234,7 +1234,7 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
     if (!name || name.trim().length === 0) {
       return res.status(400).json({ message: 'Product name is required' });
     }
-    
+
     if (!base_price || parseFloat(base_price) <= 0) {
       return res.status(400).json({ message: 'Valid base price is required' });
     }
@@ -1245,8 +1245,8 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
 
     // Generate unique slug
     const baseSlug = name.toLowerCase()
-                         .replace(/\s+/g, '-')
-                         .replace(/[^a-z0-9-]/g, '');
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
     const slug = baseSlug + '-' + Date.now();
 
     // Create image URLs array for JSON storage
@@ -1280,7 +1280,7 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const imageUrl = `${baseUrl}/uploads/products/${file.filename}`;
-        
+
         await connection.query(
           'INSERT INTO product_images (product_id, image_url, alt_text, sort_order) VALUES (?, ?, ?, ?)',
           [productId, imageUrl, name, i]
@@ -1298,19 +1298,19 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
        WHERE p.id = ?`,
       [productId]
     );
-    
+
     // Get images for response
     const [productImages] = await connection.query(
       'SELECT image_url FROM product_images WHERE product_id = ? ORDER BY sort_order ASC',
       [productId]
     );
-    
+
     const responseProduct = {
       ...product[0],
       images: productImages.map(img => img.image_url),
       stock_quantity: stockQty
     };
-    
+
     res.status(201).json({
       success: true,
       message: 'Product added successfully and pending approval',
@@ -1320,9 +1320,9 @@ router.post('/products', checkSellerApproved, upload.array('images', 5), async (
   } catch (err) {
     await connection.rollback();
     console.error('Add product error:', err);
-    res.status(500).json({ 
-      success: false, 
-      message: err.sqlMessage || err.message 
+    res.status(500).json({
+      success: false,
+      message: err.sqlMessage || err.message
     });
   } finally {
     connection.release();
@@ -1334,7 +1334,7 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-    
+
     // Check if product exists and belongs to seller
     const [existing] = await connection.query(
       'SELECT * FROM products WHERE id = ? AND seller_id = ?',
@@ -1347,75 +1347,75 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
     }
 
     const product = existing[0];
-    const { 
-      name, 
-      base_price, 
-      sale_price, 
-      stock_quantity, 
-      category_id, 
+    const {
+      name,
+      base_price,
+      sale_price,
+      stock_quantity,
+      category_id,
       description,
       tags,
       is_featured,
-      existing_images 
+      existing_images
     } = req.body;
-    
+
     const files = req.files || [];
     const baseUrl = `${req.protocol}://${req.get('host')}`;
-    
+
     const updates = [];
     const values = [];
-    
+
     if (name !== undefined && name.trim()) {
       updates.push('name = ?');
       values.push(name.trim());
-      
+
       const newSlug = name.toLowerCase()
-                         .replace(/\s+/g, '-')
-                         .replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
       updates.push('slug = ?');
       values.push(newSlug);
     }
-    
+
     if (base_price !== undefined) {
       updates.push('base_price = ?');
       values.push(parseFloat(base_price));
     }
-    
+
     if (sale_price !== undefined) {
       updates.push('sale_price = ?');
       values.push(sale_price ? parseFloat(sale_price) : null);
     }
-    
+
     if (stock_quantity !== undefined) {
       const stockQty = parseInt(stock_quantity) || 0;
       updates.push('stock_quantity = ?');
       values.push(stockQty);
     }
-    
+
     if (category_id !== undefined) {
       updates.push('category_id = ?');
       values.push(category_id || null);
     }
-    
+
     if (description !== undefined) {
       updates.push('description = ?');
       values.push(description || null);
     }
-    
+
     if (tags !== undefined) {
       updates.push('tags = ?');
       values.push(tags || null);
     }
-    
+
     if (is_featured !== undefined) {
       updates.push('is_featured = ?');
       values.push(is_featured === 'true' || is_featured === true ? 1 : 0);
     }
-    
+
     if (updates.length > 0) {
       updates.push('updated_at = NOW()');
       values.push(req.params.id);
-      
+
       await connection.query(
         `UPDATE products SET ${updates.join(', ')} WHERE id = ?`,
         values
@@ -1426,8 +1426,8 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
     let keepImages = [];
     if (existing_images) {
       try {
-        keepImages = typeof existing_images === 'string' 
-          ? JSON.parse(existing_images) 
+        keepImages = typeof existing_images === 'string'
+          ? JSON.parse(existing_images)
           : existing_images;
       } catch (e) {
         console.error('Error parsing existing_images:', e);
@@ -1451,13 +1451,13 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
         'SELECT COALESCE(MAX(sort_order), -1) as max FROM product_images WHERE product_id = ?',
         [req.params.id]
       );
-      
+
       let startOrder = maxOrder[0].max + 1;
-      
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const imageUrl = `${baseUrl}/uploads/products/${file.filename}`;
-        
+
         await connection.query(
           'INSERT INTO product_images (product_id, image_url, alt_text, sort_order) VALUES (?, ?, ?, ?)',
           [req.params.id, imageUrl, name || product.name, startOrder + i]
@@ -1475,18 +1475,18 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
        WHERE p.id = ?`,
       [req.params.id]
     );
-    
+
     // Get updated images
     const [productImages] = await connection.query(
       'SELECT image_url FROM product_images WHERE product_id = ? ORDER BY sort_order ASC',
       [req.params.id]
     );
-    
+
     const responseProduct = {
       ...updated[0],
       images: productImages.map(img => img.image_url)
     };
-    
+
     res.json({
       success: true,
       message: 'Product updated successfully',
@@ -1495,9 +1495,9 @@ router.patch('/products/:id', checkSellerApproved, upload.array('images', 5), as
   } catch (err) {
     await connection.rollback();
     console.error('Update product error:', err);
-    res.status(500).json({ 
-      success: false, 
-      message: err.sqlMessage || err.message 
+    res.status(500).json({
+      success: false,
+      message: err.sqlMessage || err.message
     });
   } finally {
     connection.release();
@@ -1509,7 +1509,7 @@ router.delete('/products/:id', checkSellerApproved, async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-    
+
     const [existing] = await connection.query(
       'SELECT id FROM products WHERE id = ? AND seller_id = ?',
       [req.params.id, req.seller.id]
@@ -1528,31 +1528,57 @@ router.delete('/products/:id', checkSellerApproved, async (req, res) => {
 
     // Delete image files from disk
     images.forEach(img => {
-      const filename = img.image_url.split('/').pop();
-      const filePath = path.join(__dirname, '../uploads/products', filename);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      try {
+        const filename = img.image_url.split('/').pop();
+        const filePath = path.join(__dirname, '../uploads/products', filename);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (err) {
+        console.error('Error deleting image file:', err);
+        // Continue even if file deletion fails
       }
     });
 
+    // Delete related records (with error handling for missing tables)
     await connection.query('DELETE FROM product_images WHERE product_id = ?', [req.params.id]);
-    await connection.query('DELETE FROM cart WHERE product_id = ?', [req.params.id]);
-    await connection.query('DELETE FROM cart_sessions WHERE product_id = ?', [req.params.id]);
-    await connection.query('DELETE FROM wishlist WHERE product_id = ?', [req.params.id]);
+
+    // Try to delete from cart - ignore if table doesn't exist
+    try {
+      await connection.query('DELETE FROM cart WHERE product_id = ?', [req.params.id]);
+    } catch (err) {
+      console.log('Cart table not found or error:', err.message);
+    }
+
+    // Try to delete from cart_sessions - ignore if table doesn't exist
+    try {
+      await connection.query('DELETE FROM cart_sessions WHERE product_id = ?', [req.params.id]);
+    } catch (err) {
+      console.log('Cart_sessions table not found or error:', err.message);
+    }
+
+    // Try to delete from wishlist - ignore if table doesn't exist
+    try {
+      await connection.query('DELETE FROM wishlist WHERE product_id = ?', [req.params.id]);
+    } catch (err) {
+      console.log('Wishlist table not found or error:', err.message);
+    }
+
+    // Delete the product itself
     await connection.query('DELETE FROM products WHERE id = ?', [req.params.id]);
 
     await connection.commit();
 
-    res.json({ 
+    res.json({
       success: true,
-      message: 'Product deleted successfully' 
+      message: 'Product deleted successfully'
     });
   } catch (err) {
     await connection.rollback();
     console.error('Delete product error:', err);
-    res.status(500).json({ 
-      success: false, 
-      message: err.sqlMessage || err.message 
+    res.status(500).json({
+      success: false,
+      message: err.sqlMessage || err.message
     });
   } finally {
     connection.release();
@@ -1618,11 +1644,11 @@ router.get('/orders/:id', checkSellerApproved, async (req, res) => {
        WHERE o.id = ? AND p.seller_id = ?`,
       [req.params.id, req.seller.id]
     );
-    
+
     if (!orders.length) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    
+
     const [items] = await pool.query(
       `SELECT oi.*, p.name, p.slug 
        FROM order_items oi 
@@ -1630,7 +1656,7 @@ router.get('/orders/:id', checkSellerApproved, async (req, res) => {
        WHERE oi.order_id = ?`,
       [req.params.id]
     );
-    
+
     res.json({
       ...orders[0],
       items
@@ -1645,16 +1671,16 @@ router.get('/orders/:id', checkSellerApproved, async (req, res) => {
 router.patch('/orders/:id/status', checkSellerApproved, async (req, res) => {
   try {
     const { status } = req.body;
-    
+
     if (!status) {
       return res.status(400).json({ message: 'Status is required' });
     }
-    
+
     const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: 'Invalid status' });
     }
-    
+
     // Check if seller has items in this order
     const [check] = await pool.query(
       `SELECT oi.id 
@@ -1663,23 +1689,23 @@ router.patch('/orders/:id/status', checkSellerApproved, async (req, res) => {
        WHERE oi.order_id = ? AND p.seller_id = ?`,
       [req.params.id, req.seller.id]
     );
-    
+
     if (!check.length) {
       return res.status(403).json({ message: 'You do not have permission to update this order' });
     }
-    
+
     const [result] = await pool.query(
       'UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?',
       [status, req.params.id]
     );
-    
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    
-    res.json({ 
+
+    res.json({
       success: true,
-      message: 'Order status updated successfully' 
+      message: 'Order status updated successfully'
     });
   } catch (err) {
     console.error('Update order error:', err);
@@ -1698,7 +1724,7 @@ router.get('/earnings', checkSellerApproved, async (req, res) => {
       'SELECT balance, pending_balance FROM sellers WHERE id = ?',
       [sellerId]
     );
-    
+
     const [totalEarnings] = await pool.query(
       `SELECT COALESCE(SUM(oi.total_price), 0) as total
        FROM order_items oi
@@ -1707,7 +1733,7 @@ router.get('/earnings', checkSellerApproved, async (req, res) => {
        WHERE p.seller_id = ? AND o.payment_status = 'paid'`,
       [sellerId]
     );
-    
+
     const [pendingEarnings] = await pool.query(
       `SELECT COALESCE(SUM(oi.total_price), 0) as total
        FROM order_items oi
@@ -1716,7 +1742,7 @@ router.get('/earnings', checkSellerApproved, async (req, res) => {
        WHERE p.seller_id = ? AND o.payment_status = 'pending'`,
       [sellerId]
     );
-    
+
     const [monthly] = await pool.query(
       `SELECT 
         DATE_FORMAT(o.created_at, '%Y-%m') as month,
@@ -1730,7 +1756,7 @@ router.get('/earnings', checkSellerApproved, async (req, res) => {
        LIMIT 6`,
       [sellerId]
     );
-    
+
     res.json({
       success: true,
       stats: {
@@ -1746,9 +1772,9 @@ router.get('/earnings', checkSellerApproved, async (req, res) => {
     });
   } catch (err) {
     console.error('Get earnings error:', err);
-    res.status(500).json({ 
-      success: false, 
-      message: err.message 
+    res.status(500).json({
+      success: false,
+      message: err.message
     });
   }
 });
@@ -1758,40 +1784,40 @@ router.post('/withdraw', checkSellerApproved, async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-    
+
     const { amount } = req.body;
-    
+
     if (!amount || amount <= 0) {
       return res.status(400).json({ message: 'Valid amount is required' });
     }
-    
+
     const [seller] = await connection.query(
       'SELECT balance FROM sellers WHERE id = ?',
       [req.seller.id]
     );
-    
+
     if (!seller.length || seller[0].balance < amount) {
       return res.status(400).json({ message: 'Insufficient balance' });
     }
-    
+
     await connection.query(
       'UPDATE sellers SET balance = balance - ?, pending_balance = pending_balance + ? WHERE id = ?',
       [amount, amount, req.seller.id]
     );
-    
+
     await connection.commit();
-    
+
     res.json({
       success: true,
       message: 'Withdrawal request submitted successfully'
     });
-    
+
   } catch (err) {
     await connection.rollback();
     console.error('Withdrawal error:', err);
-    res.status(500).json({ 
-      success: false, 
-      message: err.message 
+    res.status(500).json({
+      success: false,
+      message: err.message
     });
   } finally {
     connection.release();
@@ -1806,13 +1832,13 @@ router.get('/debug-info', auth, requireRole('seller'), async (req, res) => {
       'SELECT * FROM sellers WHERE user_id = ?',
       [req.user.id]
     );
-    
+
     // Get products for this seller
     const [products] = await pool.query(
       'SELECT id, name, stock_quantity, status FROM products WHERE seller_id = ?',
       [seller.length ? seller[0].id : null]
     );
-    
+
     res.json({
       user: {
         id: req.user.id,

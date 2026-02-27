@@ -24,6 +24,14 @@ router.get('/', auth, async (req, res) => {
 // Get unread count
 router.get('/unread-count', auth, async (req, res) => {
     try {
+        // Check if notifications table exists first
+        const [tables] = await pool.query("SHOW TABLES LIKE 'notifications'");
+
+        if (tables.length === 0) {
+            // Table doesn't exist, return 0
+            return res.json({ count: 0 });
+        }
+
         const [result] = await pool.query(
             'SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0',
             [req.user.id]
@@ -32,7 +40,8 @@ router.get('/unread-count', auth, async (req, res) => {
         res.json({ count: result[0].count });
     } catch (err) {
         console.error('Get unread count error:', err);
-        res.status(500).json({ message: err.message });
+        // Return 0 instead of error to prevent UI issues
+        res.json({ count: 0 });
     }
 });
 
