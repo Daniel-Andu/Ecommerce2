@@ -509,12 +509,16 @@
   transition: all 0.3s;
   text-decoration: none;
   display: inline-block;
+  min-width: 120px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .auth-buttons .btn-outline {
   border: 2px solid #6366F1;
   color: #6366F1;
   background: transparent;
+  padding: 0.625rem 1.5rem;
 }
 
 .auth-buttons .btn-outline:hover {
@@ -527,7 +531,8 @@
 .auth-buttons .btn-primary {
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
   color: white;
-  border: none;
+  border: 2px solid transparent;
+  padding: 0.625rem 1.5rem;
 }
 
 .auth-buttons .btn-primary:hover {
