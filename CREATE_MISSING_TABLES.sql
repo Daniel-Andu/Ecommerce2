@@ -1,6 +1,7 @@
 -- ============================================
 -- CREATE MISSING TABLES FOR E-COMMERCE DATABASE
 -- Run this in TiDB Cloud Console
+-- Database: test
 -- ============================================
 
 USE test;
