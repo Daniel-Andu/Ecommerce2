@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import * as api from '../../api';
+import { getImageUrl, handleImageError } from '../../utils/imageUtils';
 import toast from 'react-hot-toast';
 import './SellerProducts.css';
 
@@ -77,10 +78,11 @@ export default function SellerProducts() {
               {products.map(product => (
                 <tr key={product.id}>
                   <td>
-                    <img 
-                      src={product.images?.[0] || '/placeholder.jpg'} 
+                    <img
+                      src={getImageUrl(product.images?.[0], '/placeholder.jpg')}
                       alt={product.name}
                       className="product-thumb"
+                      onError={handleImageError}
                     />
                   </td>
                   <td>
@@ -103,7 +105,7 @@ export default function SellerProducts() {
                       <Link to={`/seller/products/edit/${product.id}`} className="btn-edit">
                         Edit
                       </Link>
-                      <button 
+                      <button
                         onClick={() => handleDelete(product.id)}
                         className="btn-delete"
                       >

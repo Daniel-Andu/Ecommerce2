@@ -92,8 +92,8 @@
 
 
 // frontend/src/utils/imageUtils.js
-// Use environment variable or fallback to localhost
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Use environment variable or fallback to production
+export const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://e-commerce-backend-3i6r.onrender.com';
 
 export const getImageUrl = (url, fallback = 'https://placehold.co/600x400/6366F1/white?text=Marketplace') => {
   // Handle undefined or null
@@ -102,18 +102,18 @@ export const getImageUrl = (url, fallback = 'https://placehold.co/600x400/6366F1
   // Ensure url is a string
   const urlString = String(url);
 
-  // Handle backend uploaded images
+  // Handle full URLs (already complete)
+  if (urlString.startsWith('http')) {
+    return urlString;
+  }
+
+  // Handle backend uploaded images (relative paths)
   if (urlString.startsWith('/uploads')) {
     return `${API_URL}${urlString}`;
   }
 
   // Handle local public images
   if (urlString.startsWith('/images')) {
-    return urlString;
-  }
-
-  // Handle full URLs
-  if (urlString.startsWith('http')) {
     return urlString;
   }
 
