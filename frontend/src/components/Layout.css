@@ -83,6 +83,8 @@
 .header nav a[href="/login"] {
   border: 2px solid white;
   padding: 8px 20px;
+  font-weight: 600;
+  background: transparent;
 }
 
 /* Register button - filled style */
