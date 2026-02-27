@@ -17,6 +17,14 @@ import Register from './pages/Register';
 import RegisterSeller from './pages/RegisterSeller';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import Categories from './pages/Categories';
+import Deals from './pages/Deals';
+import NewArrivals from './pages/NewArrivals';
+import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
+import Shipping from './pages/Shipping';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 
 // Protected Pages
 import Profile from './pages/Profile';
@@ -118,6 +126,14 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/register/seller" element={<RegisterSeller />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/deals" element={<Deals />} />
+          <Route path="/new-arrivals" element={<NewArrivals />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/shipping" element={<Shipping />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           
           {/* Protected Routes - Customer */}
           <Route path="/checkout" element={
