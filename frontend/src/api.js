@@ -90,7 +90,7 @@ export const auth = {
   
   // Proper FormData upload - don't set Content-Type header
   uploadProfileImage: (formData) => {
-    return request('/auth/profile/image', { 
+    return request('/auth/profile/upload', { 
       method: 'POST', 
       body: formData
     });

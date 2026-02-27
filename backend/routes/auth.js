@@ -1692,6 +1692,45 @@ router.post('/setup-admin', async (req, res) => {
   }
 });
 
+// ==================== UPLOAD PROFILE IMAGE FILE (Alternative endpoint) ====================
+router.post('/profile/upload', auth, profileUpload.single('profile_image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file uploaded' });
+    }
+
+    // Create the full image URL
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const image_url = `${baseUrl}/uploads/profile-images/${req.file.filename}`;
+
+    // Update user's profile image in database
+    await pool.query(
+      'UPDATE users SET profile_image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [image_url, req.user.id]
+    );
+
+    // Get updated user data
+    const [users] = await pool.query(
+      `SELECT id, email, first_name, last_name, phone, role, profile_image, 
+              email_verified, phone_verified, is_active, created_at
+       FROM users WHERE id = ?`,
+      [req.user.id]
+    );
+
+    res.json({
+      message: 'Profile image updated successfully',
+      profile_image: image_url,
+      user: users[0]
+    });
+  } catch (err) {
+    console.error('❌ Upload profile image error:', err);
+    res.status(500).json({
+      message: 'Failed to upload profile image',
+      error: err.message
+    });
+  }
+});
+
 // ==================== TEST ROUTE ====================
 router.get('/test', (req, res) => {
   res.json({
