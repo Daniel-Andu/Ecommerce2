@@ -81,8 +81,10 @@
 
 /* Login button - outlined style */
 .header nav a[href="/login"] {
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  padding: 6px 20px;
+  border: 2px solid white;
+  padding: 8px 24px;
+  background: transparent;
+  font-weight: 600;
 }
 
 .header nav a[href="/login"]:hover {
@@ -97,6 +99,7 @@
   padding: 8px 24px;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid white;
 }
 
 .header nav a[href="/register"]:hover {
@@ -131,7 +134,7 @@
   }
 
   .header nav a[href="/login"] {
-    padding: 4px 16px;
+    padding: 6px 20px;
   }
 
   .header nav a[href="/register"] {
@@ -182,12 +185,13 @@
   }
 
   .header nav a[href="/login"] {
-    padding: 10px 16px;
-    border: 2px solid rgba(255, 255, 255, 0.8);
+    padding: 12px 16px;
+    border: 2px solid white;
   }
 
   .header nav a[href="/register"] {
     padding: 12px 16px;
+    border: 2px solid white;
   }
 }
 
@@ -216,11 +220,13 @@
   }
 
   .header nav a[href="/login"] {
-    padding: 8px 14px;
+    padding: 10px 14px;
+    border: 2px solid white;
   }
 
   .header nav a[href="/register"] {
     padding: 10px 14px;
+    border: 2px solid white;
   }
 }
 
